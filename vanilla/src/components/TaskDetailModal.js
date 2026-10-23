@@ -730,46 +730,83 @@ ${currentTask.prDiff.split('\n').map(line => {
             <!-- Jira Subtasks Section with Interactive Progress & Auto-Advancement -->
             <div class="jira-subtasks-card">
               <div class="jira-subtasks-header">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span style="font-size: 12px; font-weight: 700; color: #172b4d; text-transform: uppercase; letter-spacing: 0.04em;">
-                    Subtask (${completedSubtasksCount}/${totalSubtasksCount})
-                  </span>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #0052cc;">${Icons.checkSquare('', 15)}</span>
+                    <span style="font-size: 12px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.04em;">
+                      Subtask &amp; Checklist
+                    </span>
+                    <span style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; padding: 1px 7px; border-radius: 9999px; background: #e0e7ff; color: #3730a3;">
+                      ${completedSubtasksCount}/${totalSubtasksCount}
+                    </span>
+                  </div>
+
                   <div class="jira-subtasks-progress">
                     <div class="jira-subtasks-progress-bar">
-                      <div class="jira-subtasks-progress-fill" style="width: ${progressPercent}%;"></div>
+                      <div class="jira-subtasks-progress-fill ${progressPercent === 100 ? 'jira-subtasks-progress-fill--complete' : ''}" style="width: ${progressPercent}%;"></div>
                     </div>
-                    <span style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: #5e6c84;">${progressPercent}%</span>
+                    <span style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: ${progressPercent === 100 ? '#059669' : '#64748b'};">
+                      ${progressPercent}%
+                    </span>
                   </div>
                 </div>
 
                 ${nextPhase ? `
-                  <button class="phase-move-btn jira-btn jira-btn--default" data-status="${nextPhase.targetStatus}" data-label="${nextPhase.label}" style="font-size: 11px; padding: 3px 8px; gap: 4px;">
+                  <button class="phase-move-btn jira-btn ${progressPercent === 100 ? 'jira-btn--primary' : 'jira-btn--default'}" data-status="${nextPhase.targetStatus}" data-label="${nextPhase.label}" style="font-size: 11px; padding: 4px 10px; gap: 4px; height: 26px;">
                     <span>Lanjut ke ${nextPhase.label}</span>
                     ${Icons.arrowRight('', 12)}
                   </button>
                 ` : ''}
               </div>
 
+              ${progressPercent === 100 && totalSubtasksCount > 0 ? `
+                <div class="subtask-celebration-banner">
+                  <span style="color: #059669; font-weight: bold;">✓</span>
+                  <span><strong>Checklist 100% Tuntas:</strong> Seluruh kriteria subtask telah selesai diverifikasi.</span>
+                </div>
+              ` : ''}
+
               <!-- Subtasks List -->
-              <div style="display: flex; flex-direction: column;">
-                ${(currentTask.subtasks || []).map(st => `
-                  <div class="subtask-row" data-subtask-id="${st.id}" style="display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid #ebecf0; background: ${st.completed ? '#fafbfc' : 'white'}; cursor: pointer; transition: all 0.1s ease;">
-                    <input type="checkbox" ${st.completed ? 'checked' : ''} style="width: 15px; height: 15px; accent-color: #0052cc; cursor: pointer;" />
-                    <span style="flex: 1; font-size: 12px; font-weight: ${st.completed ? 'normal' : '500'}; color: ${st.completed ? '#6b778c' : '#172b4d'}; text-decoration: ${st.completed ? 'line-through' : 'none'};">
+              <div class="subtasks-list">
+                ${totalSubtasksCount === 0 ? `
+                  <div class="subtasks-empty-state">
+                    Belum ada subtask. Tambahkan checklist pengerjaan pada formulir di bawah ini.
+                  </div>
+                ` : (currentTask.subtasks || []).map((st, idx) => `
+                  <div class="subtask-row ${st.completed ? 'subtask-row--done' : ''}" data-subtask-id="${st.id}">
+                    <button type="button" class="subtask-checkbox-btn ${st.completed ? 'checked' : ''}" title="${st.completed ? 'Tandai belum selesai' : 'Tandai selesai'}">
+                      ${st.completed ? Icons.check('', 12) : ''}
+                    </button>
+                    
+                    <span class="subtask-index">#${idx + 1}</span>
+
+                    <span class="subtask-title ${st.completed ? 'subtask-title--done' : ''}">
                       ${this.escapeHtml(st.title)}
                     </span>
-                    <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; ${st.completed ? 'background: #e3fcef; color: #006644;' : 'background: #dfe1e6; color: #42526e;'}">
+
+                    <span class="subtask-status-pill ${st.completed ? 'subtask-status-pill--done' : 'subtask-status-pill--todo'}">
                       ${st.completed ? 'SELESAI' : 'TO DO'}
                     </span>
+
+                    <button type="button" class="subtask-delete-btn" data-subtask-id="${st.id}" title="Hapus subtask ini">
+                      ${Icons.x('', 12)}
+                    </button>
                   </div>
                 `).join('')}
               </div>
 
               <!-- Add Subtask Form -->
-              <form id="addSubtaskForm" style="display: flex; gap: 8px; padding: 10px 14px; background: #fafbfc; border-top: 1px solid #ebecf0;">
-                <input id="newSubtaskInput" type="text" placeholder="+ Tambah subtask baru..." value="${this.escapeHtml(this.subModalData.newSubtaskTitle)}" style="flex: 1; padding: 6px 10px; font-size: 12px; border-radius: 4px; border: 1px solid #dfe1e6; outline: none; background: white;" />
-                <button type="submit" class="jira-btn jira-btn--primary" style="font-size: 12px; padding: 6px 12px;">
-                  Tambah
+              <form id="addSubtaskForm" class="subtask-add-form">
+                <span class="subtask-add-icon">${Icons.plus('', 14)}</span>
+                <input
+                  id="newSubtaskInput"
+                  type="text"
+                  placeholder="Tambah subtask baru atau kriteria acceptance... (Tekan Enter)"
+                  value="${this.escapeHtml(this.subModalData.newSubtaskTitle || '')}"
+                  class="subtask-add-input"
+                />
+                <button type="submit" class="jira-btn jira-btn--primary" style="font-size: 11.5px; padding: 4px 12px; height: 28px;">
+                  + Tambah
                 </button>
               </form>
             </div>
@@ -1263,6 +1300,9 @@ ${currentTask.prDiff.split('\n').map(line => {
     // Subtask toggle with auto-advance logic
     this.container.querySelectorAll('.subtask-row').forEach(row => {
       row.addEventListener('click', (e) => {
+        // If clicked on delete button, do not toggle
+        if (e.target.closest('.subtask-delete-btn')) return;
+
         const subtaskId = row.dataset.subtaskId;
         const targetSubtask = (currentTask.subtasks || []).find(s => s.id === subtaskId);
         if (!targetSubtask) return;
@@ -1304,6 +1344,17 @@ ${currentTask.prDiff.split('\n').map(line => {
 
         if (willBeCompleted) {
           store.addToast('info', 'Subtask Dicentang', `${newCompletedCount}/${totalCount} subtask tuntas.`);
+        }
+      });
+    });
+
+    // Subtask delete handler
+    this.container.querySelectorAll('.subtask-delete-btn').forEach(delBtn => {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const subtaskId = delBtn.dataset.subtaskId;
+        if (subtaskId) {
+          store.deleteSubtask(currentTask.id, subtaskId);
         }
       });
     });

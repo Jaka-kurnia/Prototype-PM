@@ -412,6 +412,305 @@ class Store {
     this.setState({ tasks: updatedTasks, selectedTask });
   }
 
+  addSubtask(taskId, title) {
+    if (!title || !title.trim()) return;
+    const task = this.state.tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const newSub = {
+      id: `sub-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      title: title.trim(),
+      completed: false
+    };
+
+    const updatedTasks = this.state.tasks.map((t) => {
+      if (t.id === taskId) {
+        return {
+          ...t,
+          subtasks: [...(t.subtasks || []), newSub]
+        };
+      }
+      return t;
+    });
+
+    let selectedTask = this.state.selectedTask;
+    if (selectedTask && selectedTask.id === taskId) {
+      selectedTask = {
+        ...selectedTask,
+        subtasks: [...(selectedTask.subtasks || []), newSub]
+      };
+    }
+
+    this.setState({ tasks: updatedTasks, selectedTask });
+    this.addToast('success', 'Subtask Ditambahkan', `"${newSub.title}" siap dikerjakan.`);
+  }
+
+  deleteSubtask(taskId, subtaskId) {
+    const task = this.state.tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const updatedTasks = this.state.tasks.map((t) => {
+      if (t.id === taskId) {
+        return {
+          ...t,
+          subtasks: (t.subtasks || []).filter((s) => s.id !== subtaskId)
+        };
+      }
+      return t;
+    });
+
+    let selectedTask = this.state.selectedTask;
+    if (selectedTask && selectedTask.id === taskId) {
+      selectedTask = {
+        ...selectedTask,
+        subtasks: (selectedTask.subtasks || []).filter((s) => s.id !== subtaskId)
+      };
+    }
+
+    this.setState({ tasks: updatedTasks, selectedTask });
+    this.addToast('info', 'Subtask Dihapus', 'Subtask telah dihapus dari tiket.');
+  }
+
+  // --- CRM Deal Execution & Module Breakdown ---
+  convertCrmDealToProject(dealId, options = {}) {
+    const deal = (this.state.crmDeals || []).find((d) => d.id === dealId);
+    if (!deal) {
+      this.addToast('error', 'Deal Tidak Ditemukan', 'Gagal mengeksekusi deal.');
+      return null;
+    }
+
+    const projectCode = (options.projectCode || deal.projectCode || 'PROJ').toUpperCase().trim();
+    const projectId = `proj-${projectCode.toLowerCase()}-${Date.now().toString().slice(-4)}`;
+    const projectName = deal.title || deal.name || 'Proyek Software House';
+    const clientName = deal.clientName || deal.company || 'Klien Korporat';
+    const totalContractValue = Number(deal.contractValue || deal.dealValue || 120000000);
+    const repoName = options.repoName || projectCode.toLowerCase() + '-repo';
+    const modules = options.modules && options.modules.length > 0 ? options.modules : [
+      { keySuffix: 'EPIC-1', title: 'Fondasi Sistem & Autentikasi Pengguna', description: 'Arsitektur database, sistem role permission & backend API', defaultAssigneeId: 'user-dev-1', estimateHours: 24 },
+      { keySuffix: 'EPIC-2', title: 'Fitur Inti & Alur Bisnis Transaksi', description: 'Core business logic & antarmuka operasional pengguna', defaultAssigneeId: 'user-dev-2', estimateHours: 32 },
+      { keySuffix: 'EPIC-3', title: 'Integrasi Eksternal & Payment Gateway', description: 'Koneksi API pihak ketiga, webhook & pelaporan', defaultAssigneeId: 'user-dev-3', estimateHours: 20 },
+      { keySuffix: 'EPIC-4', title: 'QA Staging, Security Test & Rilis Produksi', description: 'Pengujian integrasi sistem, stress test & deployment', defaultAssigneeId: 'user-qa', estimateHours: 16 }
+    ];
+
+    // 1. Create Project
+    const newProject = {
+      id: projectId,
+      code: projectCode,
+      name: projectName,
+      clientName: clientName,
+      contractValue: totalContractValue,
+      status: 'In Progress',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0],
+      techStack: ['Laravel 11', 'React 19', 'PostgreSQL', 'Redis', 'Docker'],
+      description: `Proyek hasil eksekusi Deal CRM [${deal.dealCode || deal.id}]. Pembagian ${modules.length} modul mandiri.`,
+      repoName: repoName
+    };
+
+    // 2. Generate Epics (Modules) and Child Tasks with Subtasks
+    const epicColors = ['#6554c0', '#0052cc', '#00875a', '#ff8b00', '#00a3bf', '#e5493a', '#403294'];
+    const newEpics = [];
+    const newTasks = [];
+
+    modules.forEach((mod, idx) => {
+      const epicKey = mod.epicKey || `${projectCode}-${mod.keySuffix || ('EPIC-' + (idx + 1))}`;
+      const epicId = `epic-${projectId}-${idx + 1}`;
+      const color = epicColors[idx % epicColors.length];
+
+      newEpics.push({
+        id: epicId,
+        projectId: projectId,
+        key: epicKey,
+        title: mod.title,
+        description: mod.description || `Spesifikasi teknis modul ${mod.title}`,
+        color: color
+      });
+
+      // Core / Backend Task for Module
+      newTasks.push({
+        id: `task-${projectId}-${idx + 1}-1`,
+        key: `${projectCode}-${101 + idx * 2}`,
+        projectId: projectId,
+        epicId: epicId,
+        title: `[Core/Backend] ${mod.title}`,
+        description: `Implementasi backend, skema basis data, dan endpoint API untuk modul: ${mod.title}.\n\nSpesifikasi:\n${mod.description || 'Pengerjaan REST API dan business logic.'}`,
+        status: idx === 0 ? 'In Progress' : 'To Do',
+        priority: idx === 0 ? 'Tinggi' : 'Sedang',
+        type: 'Story',
+        assigneeId: mod.assigneeId || mod.defaultAssigneeId || (idx % 2 === 0 ? 'user-dev-1' : 'user-dev-3'),
+        estimateHours: Math.round((Number(mod.estimateHours) || 20) * 0.6),
+        timeLoggedHours: idx === 0 ? 4 : 0,
+        subtasks: [
+          { id: `st-${Date.now()}-${idx}-1`, title: 'Rancangan skema database & migrasi SQL', completed: idx === 0 },
+          { id: `st-${Date.now()}-${idx}-2`, title: 'Implementasi API controller & service repository', completed: false },
+          { id: `st-${Date.now()}-${idx}-3`, title: 'Validasi input request & unit test assertion', completed: false }
+        ],
+        createdAt: new Date().toISOString()
+      });
+
+      // UI / Integration Task for Module
+      newTasks.push({
+        id: `task-${projectId}-${idx + 1}-2`,
+        key: `${projectCode}-${102 + idx * 2}`,
+        projectId: projectId,
+        epicId: epicId,
+        title: `[UI/Frontend] Antarmuka & Slicing ${mod.title}`,
+        description: `Slicing tampilan antarmuka dan integrasi state klien untuk modul: ${mod.title}.`,
+        status: 'Backlog',
+        priority: 'Sedang',
+        type: 'Story',
+        assigneeId: 'user-dev-2',
+        estimateHours: Math.round((Number(mod.estimateHours) || 20) * 0.4),
+        timeLoggedHours: 0,
+        subtasks: [
+          { id: `st-${Date.now()}-${idx}-4`, title: 'Slicing komponen visual responsif', completed: false },
+          { id: `st-${Date.now()}-${idx}-5`, title: 'Integrasi state store & API hook', completed: false }
+        ],
+        createdAt: new Date().toISOString()
+      });
+    });
+
+    // 3. Generate Invoicing Schedule (SOP Termin Penagihan)
+    const newInvoices = [
+      {
+        id: `inv-${Date.now()}-1`,
+        invoiceNumber: `INV/${new Date().getFullYear()}/${new Date().getMonth() + 1}/${projectCode}-001`,
+        projectId: projectId,
+        clientId: 'client-1',
+        clientName: clientName,
+        clientEmail: `${clientName.toLowerCase().replace(/[^a-z0-9]/g, '')}@client.com`,
+        type: 'Termin DP 30% (Kick-Off Proyek)',
+        percentage: 30,
+        status: 'Terkirim ke Finance',
+        subtotal: totalContractValue * 0.3,
+        taxPpn: totalContractValue * 0.3 * 0.11,
+        totalAmount: totalContractValue * 0.3 * 1.11,
+        dueDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+        notes: `Pembayaran Down Payment (DP) 30% untuk inisialisasi pengerjaan proyek ${projectName} (${modules.length} modul).`,
+        items: [
+          {
+            id: `item-${Date.now()}-1`,
+            description: `Termin 1 (DP 30%) - Kick-off Proyek & Pembagian ${modules.length} Modul Arsitektur`,
+            hours: 40,
+            rate: Math.round((totalContractValue * 0.3) / 40),
+            amount: totalContractValue * 0.3
+          }
+        ],
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: `inv-${Date.now()}-2`,
+        invoiceNumber: `INV/${new Date().getFullYear()}/${new Date().getMonth() + 1}/${projectCode}-002`,
+        projectId: projectId,
+        clientId: 'client-1',
+        clientName: clientName,
+        clientEmail: `${clientName.toLowerCase().replace(/[^a-z0-9]/g, '')}@client.com`,
+        type: 'Termin Milestone 40% (QA Sign-Off)',
+        percentage: 40,
+        status: 'Draft',
+        subtotal: totalContractValue * 0.4,
+        taxPpn: totalContractValue * 0.4 * 0.11,
+        totalAmount: totalContractValue * 0.4 * 1.11,
+        dueDate: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0],
+        notes: `Termin 2 (Milestone 40%) - Validasi Staging QA & UAT Klien setelah progres melampaui ambang batas 10%.`,
+        items: [
+          {
+            id: `item-${Date.now()}-2`,
+            description: `Termin 2 (Milestone 40%) - Pengerjaan & Verifikasi Pengujian Modul`,
+            hours: 60,
+            rate: Math.round((totalContractValue * 0.4) / 60),
+            amount: totalContractValue * 0.4
+          }
+        ],
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: `inv-${Date.now()}-3`,
+        invoiceNumber: `INV/${new Date().getFullYear()}/${new Date().getMonth() + 1}/${projectCode}-003`,
+        projectId: projectId,
+        clientId: 'client-1',
+        clientName: clientName,
+        clientEmail: `${clientName.toLowerCase().replace(/[^a-z0-9]/g, '')}@client.com`,
+        type: 'Termin Pelunasan 30% (Go-Live & Handover)',
+        percentage: 30,
+        status: 'Draft',
+        subtotal: totalContractValue * 0.3,
+        taxPpn: totalContractValue * 0.3 * 0.11,
+        totalAmount: totalContractValue * 0.3 * 1.11,
+        dueDate: new Date(Date.now() + 75 * 86400000).toISOString().split('T')[0],
+        notes: `Termin 3 (Pelunasan 30%) - Serah terima source code, deployment production, dan garansi maintenance bug 12 bulan.`,
+        items: [
+          {
+            id: `item-${Date.now()}-3`,
+            description: `Termin 3 (Pelunasan 30%) - Go-Live Production & Dokumen Serah Terima`,
+            hours: 40,
+            rate: Math.round((totalContractValue * 0.3) / 40),
+            amount: totalContractValue * 0.3
+          }
+        ],
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    // 4. Update Deal Status to Won/Deal
+    const updatedDeals = (this.state.crmDeals || []).map((d) => {
+      if (d.id === dealId) {
+        return {
+          ...d,
+          stage: 'Deal',
+          status: 'Deal',
+          isConverted: true,
+          projectCode: projectCode,
+          convertedProjectId: newProject.id
+        };
+      }
+      return d;
+    });
+
+    // 5. Dual-Broadcast Notification
+    const newNotifications = [
+      {
+        id: `notif-${Date.now()}-finance`,
+        title: `💵 [Finance] Tagihan Termin DP 30% Diterbitkan`,
+        message: `Invoice DP ${projectCode}-001 senilai ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalContractValue * 0.3 * 1.11)} untuk proyek "${projectName}" siap ditagihkan ke klien.`,
+        type: 'finance',
+        timestamp: new Date().toISOString(),
+        isRead: false,
+        projectId: newProject.id,
+        amount: totalContractValue * 0.3 * 1.11,
+        percentage: 30
+      },
+      {
+        id: `notif-${Date.now()}-crm`,
+        title: `🎉 [CRM] Deal Won Berhasil Dieksekusi!`,
+        message: `Deal "${deal.title}" resmi dieksekusi menjadi Proyek "${projectName}" (${projectCode}) dan dibagi menjadi ${modules.length} modul engineering.`,
+        type: 'crm',
+        timestamp: new Date().toISOString(),
+        isRead: false,
+        projectId: newProject.id
+      }
+    ];
+
+    // 6. Commit to State
+    this.setState({
+      projects: [...this.state.projects, newProject],
+      epics: [...this.state.epics, ...newEpics],
+      tasks: [...this.state.tasks, ...newTasks],
+      invoices: [...newInvoices, ...this.state.invoices],
+      crmDeals: updatedDeals,
+      notifications: [...newNotifications, ...this.state.notifications],
+      selectedProjectId: newProject.id
+    });
+
+    this.addToast(
+      'success',
+      '🚀 Proyek & Modul Berhasil Diinisialisasi!',
+      `Proyek "${projectName}" dibuat dengan ${modules.length} modul dan jadwal termin.`
+    );
+
+    return newProject;
+  }
+
   // --- Finance & Invoices ---
   createInvoiceFromCompletedTasks(projectId, taskIds, invoiceType) {
     const project = this.state.projects.find((p) => p.id === projectId);

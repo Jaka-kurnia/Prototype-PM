@@ -234,8 +234,8 @@ export class CrmDealsView {
         <div class="crm-deals-grid">
           ${crmDeals.map((deal) => {
             const rawStatus = deal.status || deal.stage || 'Closing/Won';
-            const isWon = rawStatus.toLowerCase().includes('closing') || rawStatus.toLowerCase().includes('won') || rawStatus.toLowerCase().includes('converted');
-            const isNegosiasi = rawStatus.toLowerCase().includes('negosiasi');
+            const isWon = rawStatus.toLowerCase().includes('closing') || rawStatus.toLowerCase().includes('won') || rawStatus.toLowerCase().includes('converted') || rawStatus.toLowerCase().includes('deal');
+            const isNegosiasi = rawStatus.toLowerCase().includes('negosiasi') || rawStatus.toLowerCase().includes('diskusi');
             
             const dealCode = deal.dealCode || deal.projectCode || 'DEAL';
             const clientName = deal.clientName || deal.clientCompany || 'Klien Software House';
@@ -298,12 +298,23 @@ export class CrmDealsView {
                       ${Icons.folderGit('', 14)}
                       <span>Buka Proyek Aktif (${convertedProject.code})</span>
                     </button>
-                  ` : `
-                    <button class="crm-btn-primary convert-deal-btn" data-deal-id="${deal.id}">
+                  ` : isWon ? `
+                    <button class="crm-btn-primary convert-deal-btn" data-deal-id="${deal.id}" style="background-color: #059669 !important;">
                       ${Icons.sparkles('', 14)}
-                      <span>Konversi Jadi Proyek Git &amp; Sprint Board</span>
+                      <span>⚡ Eksekusi Deal &amp; Bagi Modul (Epics)</span>
                       ${Icons.arrowRight('', 14)}
                     </button>
+                  ` : `
+                    <div style="display: flex; gap: 6px;">
+                      <button class="crm-btn-primary convert-deal-btn" data-deal-id="${deal.id}" style="flex: 1;">
+                        ${Icons.sparkles('', 14)}
+                        <span>⚡ Eksekusi &amp; Bagi Modul</span>
+                      </button>
+                      <button class="crm-btn-secondary mark-deal-won-btn" data-deal-id="${deal.id}" title="Tandai status sebagai Won / Deal">
+                        ${Icons.check('', 12)}
+                        <span>Tandai Won</span>
+                      </button>
+                    </div>
                   `}
 
                   ${dealCode.includes('PERPUS') || deal.id === 'deal-perpustakaan' || (deal.title && deal.title.includes('Perpustakaan')) ? `
@@ -344,7 +355,7 @@ export class CrmDealsView {
                 </span>
               </div>
               <h2 class="crm-wizard-title">
-                Konversi Deal ke Proyek Git &amp; Sprint Board
+                Eksekusi Deal: Pembagian Modul &amp; Inisialisasi Kanban
               </h2>
               <p class="crm-wizard-subtitle">
                 Inisialisasi workspace Kanban, modul Epics, alokasi tim, dan isolasi branch repositori Git.
@@ -362,10 +373,10 @@ export class CrmDealsView {
               <span>1. Identitas &amp; Git Repo</span>
             </div>
             <div class="crm-wizard-step ${this.wizardStep === 2 ? 'active' : ''}">
-              <span>2. Modul &amp; Alokasi Tim</span>
+              <span>2. Pembagian Modul (Epics)</span>
             </div>
             <div class="crm-wizard-step ${this.wizardStep === 3 ? 'active' : ''}">
-              <span>3. Review &amp; Kontrak</span>
+              <span>3. Review &amp; Finansial</span>
             </div>
           </div>
 
@@ -394,7 +405,7 @@ export class CrmDealsView {
               ` : `
                 <button id="finishWizardBtn" class="crm-btn-success" style="height: 36px; width: auto; padding: 0 22px;">
                   ${Icons.sparkles('', 14)}
-                  <span>Konfirmasi &amp; Generate Proyek Engineering</span>
+                  <span>Konfirmasi &amp; Eksekusi Proyek</span>
                 </button>
               `}
             </div>
@@ -446,8 +457,21 @@ export class CrmDealsView {
     }
 
     if (this.wizardStep === 2) {
+      const totalHours = this.customModules.reduce((acc, m) => acc + (Number(m.estimateHours) || 0), 0);
+      const uniqueAssignees = new Set(this.customModules.map(m => m.assigneeId)).size;
+
       return `
         <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="padding: 10px 14px; border-radius: 8px; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px; color: #1e40af; display: flex; align-items: flex-start; gap: 10px;">
+            <span style="font-size: 18px; line-height: 1;">🧩</span>
+            <div>
+              <strong>Alur Pembagian Modul Proyek (Epics &amp; Work Packages):</strong>
+              <p style="margin: 2px 0 0 0; color: #1e3a8a; line-height: 1.4;">
+                Deal yang berstatus Won otomatis dipecah menjadi modul-modul mandiri. Setiap modul akan di-generate menjadi tiket Core/Backend dan UI/Frontend, lengkap dengan checklist subtask acceptance criteria di Kanban Board.
+              </p>
+            </div>
+          </div>
+
           <div class="crm-form-group">
             <label class="crm-form-label">Pilih Template Arsitektur Software House:</label>
             <select id="wizardTemplateSelect" class="crm-form-select" style="font-weight: 600;">
@@ -460,29 +484,38 @@ export class CrmDealsView {
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
-            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Alokasi Modul (Epics) &amp; Developer Penanggung Jawab:</span>
-            <button id="addCustomModuleBtn" style="font-size: 12px; font-weight: 600; color: #0052cc; background: none; border: none; cursor: pointer;">
-              + Tambah Modul Baru
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Daftar Pembagian Modul (Epics) &amp; Alokasi Engineer:</span>
+              <span style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: #e0e7ff; color: #3730a3;">
+                ${this.customModules.length} Modul
+              </span>
+            </div>
+            <button id="addCustomModuleBtn" style="font-size: 12px; font-weight: 600; color: #0052cc; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <span>+ Tambah Modul Baru</span>
             </button>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+          <div style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; padding-right: 4px;">
             ${this.customModules.map((m, idx) => `
-              <div class="crm-mod-item" data-mod-idx="${idx}">
+              <div class="crm-mod-item" data-mod-idx="${idx}" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; box-shadow: 0 1px 2px rgba(9, 30, 66, 0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                  <span style="font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: white; border: 1px solid #cbd5e1; color: #0f172a;">
+                  <span style="font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: #eff6ff; border: 1px solid #bfdbfe; color: #0052cc;">
                     ${m.epicKey}
                   </span>
-                  <input class="wizard-mod-title crm-form-input" data-idx="${idx}" type="text" value="${m.title}" style="height: 30px; font-size: 12px; font-weight: 600;" />
-                  <button class="delete-mod-btn" data-idx="${idx}" style="background: none; border: none; color: #dc2626; cursor: pointer; padding: 4px;" title="Hapus modul">
+                  <input class="wizard-mod-title crm-form-input" data-idx="${idx}" type="text" value="${m.title}" placeholder="Judul modul (Epic)..." style="height: 32px; font-size: 12px; font-weight: 700;" />
+                  <button class="delete-mod-btn" data-idx="${idx}" style="background: none; border: none; color: #dc2626; cursor: pointer; padding: 4px; border-radius: 4px;" title="Hapus modul ini">
                     ${Icons.trash('', 14)}
                   </button>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px;">
+                <div style="margin-top: 6px;">
+                  <input class="wizard-mod-desc crm-form-input" data-idx="${idx}" type="text" value="${m.description || ''}" placeholder="Spesifikasi modul &amp; acceptance criteria..." style="height: 28px; font-size: 11px; color: #475569;" />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 8px; align-items: center;">
                   <div>
                     <span style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">Lead Developer:</span>
-                    <select class="wizard-mod-assignee crm-form-select" data-idx="${idx}" style="height: 30px; font-size: 11px;">
+                    <select class="wizard-mod-assignee crm-form-select" data-idx="${idx}" style="height: 30px; font-size: 11px; margin-top: 2px;">
                       ${teamMembers.map(tm => `
                         <option value="${tm.id}" ${m.assigneeId === tm.id ? 'selected' : ''}>${tm.name} (${tm.role})</option>
                       `).join('')}
@@ -491,11 +524,22 @@ export class CrmDealsView {
 
                   <div>
                     <span style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">Estimasi Jam:</span>
-                    <input class="wizard-mod-hours crm-form-input" data-idx="${idx}" type="number" value="${m.estimateHours}" style="height: 30px; font-size: 11px; font-family: var(--font-mono);" />
+                    <input class="wizard-mod-hours crm-form-input" data-idx="${idx}" type="number" value="${m.estimateHours}" style="height: 30px; font-size: 11px; font-family: var(--font-mono); margin-top: 2px;" />
                   </div>
+                </div>
+
+                <div style="margin-top: 6px; font-size: 10.5px; color: #059669; display: flex; align-items: center; gap: 6px; background: #f0fdf4; padding: 3px 8px; border-radius: 4px; border: 1px solid #dcfce7;">
+                  <span>✦ Menghasilkan: 1 Task Core/Backend + 1 Task UI/Frontend + Checklist Acceptance Criteria</span>
                 </div>
               </div>
             `).join('')}
+          </div>
+
+          <!-- Step 2 Summary Bar -->
+          <div style="padding: 10px 14px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #475569;">
+            <span>Total Modul: <strong style="color: #0f172a;">${this.customModules.length} Epics</strong></span>
+            <span>Total Beban: <strong style="color: #0f172a; font-family: var(--font-mono);">${totalHours} Jam</strong></span>
+            <span>Alokasi Tim: <strong style="color: #0f172a;">${uniqueAssignees} Developer</strong></span>
           </div>
         </div>
       `;
@@ -506,6 +550,7 @@ export class CrmDealsView {
 
       return `
         <div style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Commercial & Identity Summary -->
           <div style="padding: 14px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Ringkasan Komersial &amp; Kontrak:</span>
@@ -518,23 +563,55 @@ export class CrmDealsView {
             </div>
           </div>
 
+          <!-- Generated Modules List Review -->
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Daftar Modul yang Diterbitkan ke Kanban:</span>
+            <div style="display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto; background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+              ${this.customModules.map((m, idx) => {
+                const assignee = teamMembers.find(t => t.id === m.assigneeId);
+                return `
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; padding: 4px 6px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <span style="font-family: var(--font-mono); font-weight: 700; color: #0052cc;">${m.epicKey}</span>
+                      <strong style="color: #0f172a;">${m.title}</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #64748b;">
+                      <span>Lead: <strong>${assignee ? assignee.name : 'Developer'}</strong></span>
+                      <span style="font-family: var(--font-mono); font-weight: 600;">${m.estimateHours}h</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Finance Invoices Schedule -->
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Jadwal Termin Tagihan Finansial (SOP Progres > 10%):</span>
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Jadwal Termin Tagihan Finansial (SOP Progres &gt; 10%):</span>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
               <div style="padding: 12px; border-radius: 8px; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px;">
-                <div style="font-weight: 700; color: #1e40af;">Termin 1 (DP 30%)</div>
+                <div style="font-weight: 700; color: #1e40af; display: flex; align-items: center; gap: 4px;">
+                  <span>Termin 1 (DP 30%)</span>
+                  <span style="font-size: 9px; background: #dbeafe; color: #1d4ed8; padding: 1px 4px; border-radius: 3px;">Terkirim</span>
+                </div>
                 <div style="font-family: var(--font-mono); font-weight: 700; color: #1d4ed8; margin-top: 4px; font-size: 13px;">${this.formatIDR(value * 0.3)}</div>
-                <div style="font-size: 11px; color: #3b82f6; margin-top: 4px;">Kick-off &amp; Inisialisasi Git</div>
+                <div style="font-size: 11px; color: #3b82f6; margin-top: 4px;">Kick-off &amp; Inisialisasi Modul Git</div>
               </div>
 
               <div style="padding: 12px; border-radius: 8px; background: #fffbeb; border: 1px solid #fde68a; font-size: 12px;">
-                <div style="font-weight: 700; color: #92400e;">Termin 2 (Milestone 40%)</div>
+                <div style="font-weight: 700; color: #92400e; display: flex; align-items: center; gap: 4px;">
+                  <span>Termin 2 (Milestone 40%)</span>
+                  <span style="font-size: 9px; background: #fef3c7; color: #92400e; padding: 1px 4px; border-radius: 3px;">Draft</span>
+                </div>
                 <div style="font-family: var(--font-mono); font-weight: 700; color: #b45309; margin-top: 4px; font-size: 13px;">${this.formatIDR(value * 0.4)}</div>
-                <div style="font-size: 11px; color: #d97706; margin-top: 4px;">Validasi Staging &amp; QA Sign-Off</div>
+                <div style="font-size: 11px; color: #d97706; margin-top: 4px;">Validasi Staging &amp; QA Sign-Off (&gt; 10%)</div>
               </div>
 
               <div style="padding: 12px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; font-size: 12px;">
-                <div style="font-weight: 700; color: #065f46;">Termin 3 (Pelunasan 30%)</div>
+                <div style="font-weight: 700; color: #065f46; display: flex; align-items: center; gap: 4px;">
+                  <span>Termin 3 (Pelunasan 30%)</span>
+                  <span style="font-size: 9px; background: #d1fae5; color: #065f46; padding: 1px 4px; border-radius: 3px;">Draft</span>
+                </div>
                 <div style="font-family: var(--font-mono); font-weight: 700; color: #047857; margin-top: 4px; font-size: 13px;">${this.formatIDR(value * 0.3)}</div>
                 <div style="font-size: 11px; color: #059669; margin-top: 4px;">Go-Live &amp; Garansi 12 Bulan</div>
               </div>
@@ -543,7 +620,7 @@ export class CrmDealsView {
 
           <div style="padding: 10px 14px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 12px; color: #475569; display: flex; align-items: center; gap: 8px;">
             <span style="font-weight: bold; color: #0052cc;">ℹ</span>
-            <span>Setelah konfirmasi, sistem akan otomatis berpindah ke tab Kanban Board proyek baru.</span>
+            <span>Setelah konfirmasi, sistem akan otomatis berpindah ke tab Kanban Board proyek baru dan modul-modul siap dikerjakan.</span>
           </div>
         </div>
       `;
@@ -647,9 +724,43 @@ export class CrmDealsView {
         this.customModules.splice(idx, 1);
         this.render();
       }
+
+      // Mark deal won button
+      const markWonBtn = e.target.closest('.mark-deal-won-btn');
+      if (markWonBtn) {
+        const dealId = markWonBtn.dataset.dealId;
+        const deal = (store.getState().crmDeals || []).find(d => d.id === dealId);
+        if (deal) {
+          deal.status = 'Deal';
+          deal.stage = 'Deal';
+          store.addToast('success', 'Deal Ditandai Won! 🎉', `Status deal "${deal.title}" kini Won/Deal. Siap dibagi modul.`);
+          this.openConvertModal(deal);
+        }
+      }
     });
 
-    // Inputs change listeners for Wizard
+    // Input and change listeners for Wizard
+    this.element.addEventListener('input', (e) => {
+      if (e.target.classList.contains('wizard-mod-title')) {
+        const idx = Number(e.target.dataset.idx);
+        if (this.customModules[idx]) {
+          this.customModules[idx].title = e.target.value;
+        }
+      }
+      if (e.target.classList.contains('wizard-mod-desc')) {
+        const idx = Number(e.target.dataset.idx);
+        if (this.customModules[idx]) {
+          this.customModules[idx].description = e.target.value;
+        }
+      }
+      if (e.target.classList.contains('wizard-mod-hours')) {
+        const idx = Number(e.target.dataset.idx);
+        if (this.customModules[idx]) {
+          this.customModules[idx].estimateHours = Number(e.target.value) || 0;
+        }
+      }
+    });
+
     this.element.addEventListener('change', (e) => {
       if (e.target.id === 'wizardTemplateSelect') {
         this.selectedTemplateKey = e.target.value;
@@ -661,20 +772,6 @@ export class CrmDealsView {
         const idx = Number(e.target.dataset.idx);
         if (this.customModules[idx]) {
           this.customModules[idx].assigneeId = e.target.value;
-        }
-      }
-
-      if (e.target.classList.contains('wizard-mod-hours')) {
-        const idx = Number(e.target.dataset.idx);
-        if (this.customModules[idx]) {
-          this.customModules[idx].estimateHours = Number(e.target.value) || 0;
-        }
-      }
-
-      if (e.target.classList.contains('wizard-mod-title')) {
-        const idx = Number(e.target.dataset.idx);
-        if (this.customModules[idx]) {
-          this.customModules[idx].title = e.target.value;
         }
       }
     });

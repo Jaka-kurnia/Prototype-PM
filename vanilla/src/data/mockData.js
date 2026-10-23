@@ -2404,6 +2404,35 @@ const INITIAL_CRM_DEALS = [
     scopeNotes: "POS kasir layar sentuh cepat, cetak struk thermal 58mm, potong stok resep bahan baku (beras, ayam, bumbu), pembayaran QRIS dinamis, dan rekap tutup kasir harian (End of Day).",
     paymentTerms: "Termin 1 (50% Kick-off & Inisialisasi), Termin 2 (50% UAT & Training Kasir)",
     closedDate: "2026-10-15"
+  },
+  {
+    id: "deal-crm-medika",
+    dealCode: "DEAL-MEDIKA-01",
+    title: "Sistem ERP Klinik Gigi & Medika Prima (Odontogram & BPJS)",
+    clientName: "PT Medika Prima Sejahtera (Klinik Utama)",
+    clientPic: "drg. Hendra Pratama, Sp.Ort",
+    clientEmail: "admin@medikaprima.co.id",
+    contractValue: 98000000,
+    currency: "IDR",
+    status: "Closing/Won",
+    templateType: "pos_system",
+    scopeNotes: "Sistem rekam medis digital odontogram interaktif, pendaftaran reservasi pasien online, kasir farmasi obat, dan integrasi SatuSehat Kemenkes.",
+    paymentTerms: "Termin 1 (30% DP Rp 29.400.000), Termin 2 (40% UAT Rp 39.200.000), Termin 3 (30% Handover Rp 29.400.000)",
+    closedDate: "2026-10-21"
+  },
+  {
+    id: "deal-crm-b2b",
+    dealCode: "DEAL-B2B-01",
+    title: "Marketplace B2B Material Bangunan & Multi-Gudang",
+    clientName: "PT Semen Nusantara Konstruksi",
+    clientPic: "Bpk. Victor Haryanto",
+    clientEmail: "procurement@nusantarakonstruksi.com",
+    contractValue: 245000000,
+    currency: "IDR",
+    status: "Negosiasi",
+    templateType: "ecommerce_platform",
+    scopeNotes: "Katalog grosir semen & baja, sistem kredit tenor tempo (TOP 30/60 Hari), dan sinkronisasi multi-gudang logistik armada ekspedisi.",
+    paymentTerms: "Termin 1 (30% DP Rp 73.500.000), Termin 2 (40% UAT Rp 98.000.000), Termin 3 (30% Handover Rp 73.500.000)"
   }
 ];
 const INITIAL_INVOICES = [

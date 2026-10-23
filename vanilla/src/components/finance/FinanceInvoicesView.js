@@ -50,6 +50,12 @@ export class FinanceInvoicesView {
       return inv.status === this.statusFilter;
     });
 
+    const totalContractValue = projects.reduce((acc, p) => acc + (Number(p.contractValue) || 0), 0);
+    const totalInvoiced = invoices.reduce((acc, inv) => acc + (Number(inv.totalAmount) || 0), 0);
+    const totalPaid = invoices.filter(inv => inv.status === 'Lunas').reduce((acc, inv) => acc + (Number(inv.totalAmount) || 0), 0);
+    const pendingInvoices = invoices.filter(inv => inv.status !== 'Lunas');
+    const totalPending = pendingInvoices.reduce((acc, inv) => acc + (Number(inv.totalAmount) || 0), 0);
+
     this.element.innerHTML = `
       <div class="finance-container">
         <!-- 1. Top Banner -->
@@ -71,14 +77,53 @@ export class FinanceInvoicesView {
           </div>
 
           <div class="finance-banner-actions">
-            <button id="openMilestoneBtn" class="finance-btn-primary">
-              <span style="color: #34d399;">${Icons.percent('', 14)}</span>
+            <button id="openMilestoneBtn" class="finance-btn-primary" style="background: #0052cc; color: white;">
+              <span style="color: #6ee7b7;">${Icons.percent('', 14)}</span>
               <span>+ Terbitkan Invoice Termin (Progres &gt; 10%)</span>
             </button>
             <button id="openCreateCompletedTasksBtn" class="finance-btn-secondary">
               ${Icons.plus('', 14)}
               <span>Invoice Task Selesai (${unbilledCompletedTasks.length})</span>
             </button>
+          </div>
+        </div>
+
+        <!-- 2. Financial KPI Summary Cards -->
+        <div class="finance-kpi-grid">
+          <div class="finance-kpi-card">
+            <div class="finance-kpi-header">
+              <span class="finance-kpi-title">Portofolio Kontrak</span>
+              <span class="finance-kpi-icon finance-kpi-icon--blue">${Icons.folder('', 16)}</span>
+            </div>
+            <div class="finance-kpi-value">${this.formatIDR(totalContractValue)}</div>
+            <div class="finance-kpi-subtext">Total nilai dari ${projects.length} proyek aktif</div>
+          </div>
+
+          <div class="finance-kpi-card">
+            <div class="finance-kpi-header">
+              <span class="finance-kpi-title">Tagihan Diterbitkan</span>
+              <span class="finance-kpi-icon finance-kpi-icon--indigo">${Icons.fileText('', 16)}</span>
+            </div>
+            <div class="finance-kpi-value">${this.formatIDR(totalInvoiced)}</div>
+            <div class="finance-kpi-subtext">${invoices.length} tagihan &amp; termin diterbitkan</div>
+          </div>
+
+          <div class="finance-kpi-card">
+            <div class="finance-kpi-header">
+              <span class="finance-kpi-title">Pembayaran Lunas</span>
+              <span class="finance-kpi-icon finance-kpi-icon--emerald">${Icons.checkCircle('', 16)}</span>
+            </div>
+            <div class="finance-kpi-value" style="color: #059669;">${this.formatIDR(totalPaid)}</div>
+            <div class="finance-kpi-subtext">${invoices.filter(i => i.status === 'Lunas').length} tagihan telah lunas diverifikasi</div>
+          </div>
+
+          <div class="finance-kpi-card">
+            <div class="finance-kpi-header">
+              <span class="finance-kpi-title">Sisa Piutang / Menunggu</span>
+              <span class="finance-kpi-icon finance-kpi-icon--amber">${Icons.clock('', 16)}</span>
+            </div>
+            <div class="finance-kpi-value" style="color: #d97706;">${this.formatIDR(totalPending)}</div>
+            <div class="finance-kpi-subtext">${pendingInvoices.length} tagihan dalam proses review / jatuh tempo</div>
           </div>
         </div>
 
@@ -212,7 +257,7 @@ export class FinanceInvoicesView {
             </div>
           </div>
 
-          <div>
+          <div class="finance-invoices-cards-grid">
             ${filteredInvoices.length === 0 ? `
               <div style="padding: 32px; text-align: center; color: var(--color-zinc-400); font-size: 12px;">
                 Tidak ada invoice pada status ini.
@@ -224,84 +269,90 @@ export class FinanceInvoicesView {
               const isApprovedPm = inv.status === 'Disetujui PM';
 
               return `
-                <div class="finance-item-row">
-                  <div style="display: flex; flex-direction: column; gap: 6px; flex: 1;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                      <span style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--color-zinc-900); background: var(--color-zinc-100); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--color-zinc-200);">
-                        ${inv.invoiceNumber}
-                      </span>
-                      <span style="color: var(--color-zinc-300);">·</span>
-
+                <div class="finance-invoice-card ${isPaid ? 'finance-invoice-card--paid' : ''}">
+                  <div class="finance-invoice-card__header">
+                    <div class="finance-invoice-card__id-group">
+                      <span class="finance-invoice-num">${inv.invoiceNumber}</span>
+                      
                       <!-- Status Badge -->
-                      <span style="font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 9999px; border: 1px solid; display: inline-flex; align-items: center; gap: 4px; ${
-                        isPaid
-                          ? 'background: #ecfdf5; color: #065f46; border-color: #a7f3d0;'
-                          : isSentToFinance
-                          ? 'background: #f0fdfa; color: #115e59; border-color: #99f6e4; font-weight: 700;'
-                          : isApprovedPm
-                          ? 'background: #eff6ff; color: #1e40af; border-color: #bfdbfe;'
-                          : isSentToClient
-                          ? 'background: #faf5ff; color: #6b21a8; border-color: #e9d5ff;'
-                          : 'background: #fffbeb; color: #92400e; border-color: #fde68a;'
+                      <span class="finance-status-pill ${
+                        isPaid ? 'pass' : isSentToFinance ? 'teal' : isApprovedPm ? 'blue' : isSentToClient ? 'purple' : 'amber'
                       }">
                         ${isSentToFinance ? Icons.send('', 12) : ''}
                         ${isPaid ? Icons.checkCircle('', 12) : ''}
                         <span>${inv.status}</span>
                       </span>
 
-                      <span style="color: var(--color-zinc-300);">·</span>
-                      <span style="font-size: 12px; color: var(--color-zinc-600); font-weight: 500;">${inv.type}</span>
-
                       ${inv.percentage ? `
-                        <span style="font-size: 10px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 4px; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; font-weight: 600;">
+                        <span class="finance-termin-pill">
                           Termin ${inv.percentage}%
                         </span>
                       ` : ''}
+
+                      <span style="font-size: 12px; color: #475569; font-weight: 600;">
+                        ${inv.type}
+                      </span>
                     </div>
 
-                    <div style="font-size: 12px; color: var(--color-zinc-700);">
-                      Klien: <strong style="color: var(--color-zinc-900);">${inv.clientName}</strong> · Tanggal Jatuh Tempo: <span style="font-weight: 500;">${inv.dueDate}</span>
+                    <div class="finance-invoice-card__amount">
+                      <span class="finance-amount-val">${this.formatIDR(inv.totalAmount)}</span>
+                      <span class="finance-amount-sub">Total Nett (PPN 11% inc.)</span>
                     </div>
-
-                    <div style="font-size: 11px; color: var(--color-zinc-500);">
-                      Rincian: ${inv.items.length} item penagihan · Subtotal: ${this.formatIDR(inv.subtotal)} + PPN (11%): ${this.formatIDR(inv.taxPpn)}
-                    </div>
-
-                    ${inv.notes ? `
-                      <div style="font-size: 11px; color: var(--color-zinc-500); font-style: italic;">
-                        Catatan: &ldquo;${inv.notes}&rdquo;
-                      </div>
-                    ` : ''}
                   </div>
 
-                  <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
-                    <div style="text-align: right;">
-                      <div style="font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: var(--color-zinc-900);">
-                        ${this.formatIDR(inv.totalAmount)}
-                      </div>
-                      <div style="font-size: 10px; color: var(--color-zinc-400);">Total Tagihan (Nett)</div>
+                  <div class="finance-invoice-card__body">
+                    <div class="finance-body-col">
+                      <span class="finance-body-label">Klien &amp; Proyek:</span>
+                      <span class="finance-body-val">
+                        <strong style="color: #0f172a;">${inv.clientName}</strong>
+                      </span>
+                      <span class="finance-body-meta">ID Proyek: <strong>${inv.projectId || 'Software'}</strong></span>
                     </div>
 
+                    <div class="finance-body-col">
+                      <span class="finance-body-label">Rincian Finansial:</span>
+                      <span class="finance-body-val">Subtotal: ${this.formatIDR(inv.subtotal)}</span>
+                      <span class="finance-body-meta">PPN (11% UU HPP): ${this.formatIDR(inv.taxPpn)} · ${inv.items.length} item</span>
+                    </div>
+
+                    <div class="finance-body-col">
+                      <span class="finance-body-label">Jatuh Tempo &amp; Status:</span>
+                      <span class="finance-body-val" style="font-weight: 700; color: ${isPaid ? '#059669' : '#b45309'}; font-family: var(--font-mono);">
+                        ${inv.dueDate || '-'}
+                      </span>
+                      <span class="finance-body-meta">${isPaid ? '✓ Lunas Terverifikasi' : 'Menunggu Pelunasan / Review'}</span>
+                    </div>
+                  </div>
+
+                  ${inv.notes ? `
+                    <div class="finance-invoice-card__notes">
+                      ${Icons.fileText('', 12)}
+                      <span>Catatan: &ldquo;${inv.notes}&rdquo;</span>
+                    </div>
+                  ` : ''}
+
+                  <div class="finance-invoice-card__actions">
                     <button class="finance-btn-secondary view-invoice-btn" data-invoice-id="${inv.id}">
-                      Buka Invoice
+                      ${Icons.fileText('', 13)}
+                      <span>Buka &amp; Cetak Faktur</span>
                     </button>
 
-                    <!-- Quick status transitions -->
-                    ${inv.status === 'Draft' ? `
-                      <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Disetujui PM" style="background: #4f46e5;">
-                        Setujui (PM)
-                      </button>
-                    ` : ''}
+                    <div class="finance-action-group">
+                      ${inv.status === 'Draft' ? `
+                        <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Disetujui PM" style="background: #0052cc;">
+                          ${Icons.check('', 12)}
+                          <span>Setujui (PM)</span>
+                        </button>
+                      ` : ''}
 
-                    ${inv.status === 'Disetujui PM' ? `
-                      <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Terkirim ke Finance" style="background: #0d9488;">
-                        ${Icons.send('', 12)}
-                        <span>Kirim ke Finance</span>
-                      </button>
-                    ` : ''}
+                      ${inv.status === 'Disetujui PM' ? `
+                        <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Terkirim ke Finance" style="background: #0d9488;">
+                          ${Icons.send('', 12)}
+                          <span>Kirim ke Finance</span>
+                        </button>
+                      ` : ''}
 
-                    ${inv.status === 'Terkirim ke Finance' ? `
-                      <div style="display: flex; gap: 6px;">
+                      ${inv.status === 'Terkirim ke Finance' ? `
                         <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Terkirim ke Klien" style="background: #4f46e5;">
                           ${Icons.send('', 12)}
                           <span>Kirim ke Klien</span>
@@ -310,15 +361,15 @@ export class FinanceInvoicesView {
                           ${Icons.check('', 12)}
                           <span>Tandai Lunas</span>
                         </button>
-                      </div>
-                    ` : ''}
+                      ` : ''}
 
-                    ${inv.status === 'Terkirim ke Klien' ? `
-                      <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Lunas" style="background: #059669;">
-                        ${Icons.check('', 12)}
-                        <span>Tandai Lunas</span>
-                      </button>
-                    ` : ''}
+                      ${inv.status === 'Terkirim ke Klien' ? `
+                        <button class="finance-btn-primary transition-status-btn" data-invoice-id="${inv.id}" data-target-status="Lunas" style="background: #059669;">
+                          ${Icons.check('', 12)}
+                          <span>Tandai Lunas</span>
+                        </button>
+                      ` : ''}
+                    </div>
                   </div>
                 </div>
               `;
