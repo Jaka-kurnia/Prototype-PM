@@ -1,0 +1,264 @@
+/* ==========================================================================
+   SIDEBAR COMPONENT STYLING - ATLASSIAN JIRA PROJECT SIDEBAR
+   Collapsible, clean, light grey navigation matching Jira Cloud UI/UX
+   ========================================================================== */
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background-color: rgba(9, 30, 66, 0.54);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+.sidebar-backdrop--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #f4f5f7;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%;
+  user-select: none;
+  position: relative;
+  transition: width var(--transition-normal), transform var(--transition-normal);
+  z-index: 40;
+}
+
+.sidebar--collapsed {
+  width: 64px;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .sidebar--mobile-open {
+    transform: translateX(0);
+  }
+}
+
+/* Sidebar Collapse Toggle Button */
+.sidebar__collapse-toggle {
+  position: absolute;
+  top: 24px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  z-index: 50;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+}
+.sidebar__collapse-toggle:hover {
+  background-color: var(--jira-blue);
+  color: #ffffff;
+  border-color: var(--jira-blue);
+}
+
+/* Project Header Banner */
+.sidebar__project-header {
+  padding: 16px 14px 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  min-height: 58px;
+}
+
+.sidebar__project-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #0052cc 0%, #2684ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 82, 204, 0.2);
+}
+
+.sidebar__project-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sidebar--collapsed .sidebar__project-info {
+  display: none;
+}
+
+.sidebar__project-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__project-category {
+  font-size: 11px;
+  color: var(--color-text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Nav Scroll Container */
+.sidebar__nav-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar__nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar__section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.05em;
+  padding: 6px 10px 4px 10px;
+  text-transform: uppercase;
+}
+
+.sidebar--collapsed .sidebar__section-title {
+  display: none;
+}
+
+/* Nav Item */
+.sidebar__nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-body);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+.sidebar__nav-item:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+  color: var(--color-text-heading);
+}
+
+.sidebar__nav-item--active {
+  background-color: var(--jira-blue-subtle) !important;
+  color: var(--jira-blue) !important;
+  font-weight: 600;
+}
+
+.sidebar__nav-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sidebar__nav-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.sidebar__nav-item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar--collapsed .sidebar__nav-item-label {
+  display: none;
+}
+
+/* Badge in Nav Item */
+.sidebar__badge {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background-color: rgba(9, 30, 66, 0.08);
+  color: var(--color-text-subtle);
+  line-height: 14px;
+}
+
+.sidebar__nav-item--active .sidebar__badge {
+  background-color: #b3d4ff;
+  color: var(--jira-blue-active);
+}
+
+.sidebar--collapsed .sidebar__badge {
+  display: none;
+}
+
+/* Bottom Footer (Project Settings) */
+.sidebar__footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar__settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-subtle);
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.sidebar__settings-btn:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+  color: var(--color-text-heading);
+}
+
+.sidebar--collapsed .sidebar__settings-btn span {
+  display: none;
+}

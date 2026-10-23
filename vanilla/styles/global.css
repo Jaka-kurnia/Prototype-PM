@@ -1,0 +1,290 @@
+/* ==========================================================================
+   ATLASSIAN JIRA DESIGN SYSTEM - GLOBAL TOKENS & STYLES
+   Equivalent to Jira Software Cloud UI/UX
+   ========================================================================== */
+
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Medium', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* Atlassian Brand Blue & Primary Colors */
+  --jira-blue: #0052cc;
+  --jira-blue-hover: #0065ff;
+  --jira-blue-active: #0747a6;
+  --jira-blue-subtle: #deebff;
+  --jira-blue-subtle-hover: #b3d4ff;
+  --jira-blue-text: #0052cc;
+
+  /* Neutral Surface & Background Colors (Atlassian Neutrals) */
+  --color-page-bg: #f4f5f7;
+  --color-card-bg: #ffffff;
+  --color-surface-hover: #ebecf0;
+  --color-surface-active: #e4e7eb;
+  
+  --color-text-heading: #172b4d;
+  --color-text-body: #172b4d;
+  --color-text-subtle: #5e6c84;
+  --color-text-disabled: #a5b2c6;
+  --color-text-link: #0052cc;
+
+  --color-border: #dfe1e6;
+  --color-border-subtle: #ebecf0;
+  --color-border-focus: #4c9aff;
+
+  /* Zinc & Slate Neutral Palette */
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-800: #27272a;
+  --color-zinc-900: #18181b;
+
+  /* Jira Status Colors (Atlassian Issue Status Categories) */
+  --jira-status-todo-bg: #dfe1e6;
+  --jira-status-todo-text: #42526e;
+  --jira-status-todo-border: #c1c7d0;
+
+  --jira-status-progress-bg: #deebff;
+  --jira-status-progress-text: #0052cc;
+  --jira-status-progress-border: #b3d4ff;
+
+  --jira-status-review-bg: #fff0b3;
+  --jira-status-review-text: #172b4d;
+  --jira-status-review-border: #ffe380;
+
+  --jira-status-qa-bg: #eae6ff;
+  --jira-status-qa-text: #403294;
+  --jira-status-qa-border: #c0b6f2;
+
+  --jira-status-done-bg: #e3fcef;
+  --jira-status-done-text: #006644;
+  --jira-status-done-border: #abf5d1;
+
+  --jira-status-hotfix-bg: #ffebe6;
+  --jira-status-hotfix-text: #bf2600;
+  --jira-status-hotfix-border: #ffbdad;
+
+  /* Jira Issue Type Colors */
+  --jira-type-bug: #e5493a;
+  --jira-type-task: #4bade8;
+  --jira-type-story: #36b37e;
+  --jira-type-epic: #6554c0;
+  --jira-type-subtask: #00a3bf;
+
+  /* Jira Priorities */
+  --jira-priority-highest: #ff5630;
+  --jira-priority-high: #ff7452;
+  --jira-priority-medium: #ffab00;
+  --jira-priority-low: #36b37e;
+  --jira-priority-lowest: #2684ff;
+
+  /* Modern Shadows */
+  --shadow-xs: 0 1px 1px rgba(9, 30, 66, 0.25);
+  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  --shadow-md: 0 4px 8px -2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  --shadow-lg: 0 8px 16px -4px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  --shadow-dialog: 0 12px 24px -6px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  --shadow-card: 0 1px 2px rgba(9, 30, 66, 0.12), 0 0 1px rgba(9, 30, 66, 0.2);
+  --shadow-card-hover: 0 4px 8px -1px rgba(9, 30, 66, 0.2), 0 0 1px rgba(9, 30, 66, 0.25);
+
+  /* Radii */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-normal: 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-size: 14px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-body);
+  background-color: var(--color-page-bg);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* App Root Structure */
+.app-root {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-page-bg);
+}
+
+.app-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  background-color: var(--color-page-bg);
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  position: relative;
+  background-color: var(--color-page-bg);
+}
+
+/* Jira Standard Badges */
+.jira-badge {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 14px;
+}
+
+.jira-badge--todo {
+  background-color: var(--jira-status-todo-bg);
+  color: var(--jira-status-todo-text);
+  border: 1px solid var(--jira-status-todo-border);
+}
+
+.jira-badge--progress {
+  background-color: var(--jira-status-progress-bg);
+  color: var(--jira-status-progress-text);
+  border: 1px solid var(--jira-status-progress-border);
+}
+
+.jira-badge--review {
+  background-color: var(--jira-status-review-bg);
+  color: var(--jira-status-review-text);
+  border: 1px solid var(--jira-status-review-border);
+}
+
+.jira-badge--qa {
+  background-color: var(--jira-status-qa-bg);
+  color: var(--jira-status-qa-text);
+  border: 1px solid var(--jira-status-qa-border);
+}
+
+.jira-badge--done {
+  background-color: var(--jira-status-done-bg);
+  color: var(--jira-status-done-text);
+  border: 1px solid var(--jira-status-done-border);
+}
+
+.jira-badge--hotfix {
+  background-color: var(--jira-status-hotfix-bg);
+  color: var(--jira-status-hotfix-text);
+  border: 1px solid var(--jira-status-hotfix-border);
+}
+
+/* Jira Standard Buttons */
+.jira-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.jira-btn--primary {
+  background-color: var(--jira-blue);
+  color: #ffffff;
+}
+.jira-btn--primary:hover {
+  background-color: var(--jira-blue-hover);
+}
+.jira-btn--primary:active {
+  background-color: var(--jira-blue-active);
+}
+
+.jira-btn--subtle {
+  background-color: transparent;
+  color: var(--color-text-subtle);
+}
+.jira-btn--subtle:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-heading);
+}
+
+.jira-btn--default {
+  background-color: rgba(9, 30, 66, 0.04);
+  color: var(--color-text-heading);
+  border: 1px solid var(--color-border);
+}
+.jira-btn--default:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+}
+
+/* Custom Scrollbar for Jira Look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c1c7d0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a5b2c6;
+}

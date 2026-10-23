@@ -1,0 +1,153 @@
+/* ==========================================================================
+   AI AUTOMATION HUB & INTELLIGENT ORCHESTRATOR STYLING
+   ========================================================================== */
+
+.ai-hub-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-zinc-50);
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.ai-hub-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+.ai-card {
+  background-color: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(228, 228, 231, 0.85);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ai-preset-chip {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-zinc-200);
+  background-color: var(--color-zinc-50);
+  color: var(--color-zinc-700);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.ai-preset-chip:hover {
+  background-color: var(--color-zinc-100);
+  border-color: var(--color-zinc-300);
+}
+
+.ai-preset-chip--active {
+  background-color: var(--color-zinc-900);
+  color: #ffffff;
+  border-color: var(--color-zinc-900);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ai-pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(240px, 1fr));
+  gap: 16px;
+  overflow-x: auto;
+  align-items: start;
+}
+
+.ai-pipeline-col {
+  background-color: #f8fafc;
+  border: 1px solid var(--color-zinc-200);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.ai-pipeline-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-zinc-200);
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-pipeline-tasks {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.ai-task-card {
+  background-color: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(228, 228, 231, 0.8);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ai-task-card:hover {
+  border-color: var(--color-zinc-400);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Terminal JSON preview */
+.terminal-block {
+  background-color: #090d16;
+  border-radius: var(--radius-xl);
+  border: 1px solid #1e293b;
+  padding: 16px;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-x: auto;
+  max-height: 280px;
+}
+
+/* Drawer / Inspector Modal */
+.inspector-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(9, 9, 11, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+.inspector-drawer {
+  width: 100%;
+  max-width: 680px;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideInRight 0.25s ease;
+}
