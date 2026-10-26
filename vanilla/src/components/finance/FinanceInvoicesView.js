@@ -320,7 +320,7 @@ export class FinanceInvoicesView {
                       <span class="finance-body-val" style="font-weight: 700; color: ${isPaid ? '#059669' : '#b45309'}; font-family: var(--font-mono);">
                         ${inv.dueDate || '-'}
                       </span>
-                      <span class="finance-body-meta">${isPaid ? '✓ Lunas Terverifikasi' : 'Menunggu Pelunasan / Review'}</span>
+                      <span class="finance-body-meta">${isPaid ? '<i class="fi fi-rr-check"></i> Lunas Terverifikasi' : 'Menunggu Pelunasan / Review'}</span>
                     </div>
                   </div>
 

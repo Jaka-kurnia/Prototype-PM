@@ -434,7 +434,7 @@ export class PerpusIntakeModal {
         <div class="modal-header" style="background: #f8fafc;">
           <div style="display: flex; align-items: center; gap: 14px;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; box-shadow: 0 2px 4px rgba(37,99,235,0.2);">
-              📚
+              <i class="fi fi-rr-book-alt" style="font-size: 20px;"></i>
             </div>
             <div>
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -565,7 +565,7 @@ export class PerpusIntakeModal {
                   <div style="display: flex; flex-direction: column; gap: 4px;">
                     ${st.deliverables.map(d => `
                       <div style="display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: #334155;">
-                        <span style="color: #059669; font-weight: bold; margin-top: 2px;">✓</span>
+                        <i class="fi fi-rr-check" style="color: #059669; font-weight: bold; margin-top: 2px;"></i>
                         <span>${d}</span>
                       </div>
                     `).join('')}

@@ -1,7 +1,7 @@
 /* ==========================================================================
    KANBAN BOARD STYLING - ATLASSIAN JIRA SOFTWARE CLOUD EQUIVALENT
-   Proportional layout with locked column headers, column-independent scrolling,
-   compact single-row toolbar, and maximized vertical card space.
+   Spacious columns, widened cards, informative workflow multi-tier header,
+   and smooth horizontal canvas scrolling.
    ========================================================================== */
 
 .kanban-view {
@@ -14,62 +14,116 @@
 }
 
 /* ==========================================================================
-   1. Jira Board Header (Compact 38px Height)
+   1. INFORMATIVE WORKFLOW-ALIGNED MULTI-TIER HEADER
    ========================================================================== */
 .kanban-board-header {
-  padding: 4px 16px 2px 16px;
+  padding: 10px 20px 8px 20px;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 8px;
   flex-shrink: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .kanban-board-breadcrumbs {
-  font-size: 10.5px;
+  font-size: 11.5px;
   color: var(--color-text-subtle, #64748b);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  line-height: 14px;
+  line-height: 16px;
 }
-.kanban-board-breadcrumbs span {
-  display: flex;
-  align-items: center;
+
+.kanban-breadcrumb-code {
+  font-weight: 700;
+  color: var(--color-text-heading, #0f172a);
 }
 
 .kanban-board-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  height: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kanban-board-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .kanban-board-title {
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--color-text-heading, #0f172a);
   letter-spacing: -0.015em;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .kanban-board-star-btn {
-  color: var(--color-text-subtle, #64748b);
-  padding: 2px;
+  color: var(--color-text-subtle, #94a3b8);
+  padding: 4px;
   border-radius: var(--radius-xs, 4px);
   display: flex;
   align-items: center;
-  transition: color var(--transition-fast, 120ms ease);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast, 120ms ease);
 }
+
 .kanban-board-star-btn:hover {
-  color: #ffab00;
+  color: #f59e0b;
+  transform: scale(1.15);
+}
+
+.kanban-sprint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2.5px 9px;
+  border-radius: 9999px;
+}
+
+.kanban-sprint-dates {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Header Action Buttons */
+.kanban-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kanban-btn-kbd {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  padding: 0 4px;
+  border-radius: 3px;
+  margin-left: 3px;
 }
 
 /* Jira Standard Buttons */
@@ -77,32 +131,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   border-radius: 4px;
+  font-size: 12px;
   font-weight: 600;
+  padding: 5px 12px;
+  height: 30px;
   cursor: pointer;
   transition: all var(--transition-fast, 120ms ease);
   user-select: none;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
 .jira-btn--primary {
   background-color: var(--jira-blue, #0052cc);
   color: #ffffff;
-  border: none;
+  border-color: #0052cc;
   box-shadow: 0 1px 2px rgba(0, 82, 204, 0.2);
 }
+
 .jira-btn--primary:hover {
   background-color: var(--jira-blue-hover, #0065ff);
 }
 
 .jira-btn--default {
-  background-color: #f1f5f9;
+  background-color: #ffffff;
   color: #334155;
   border: 1px solid #cbd5e1;
 }
+
 .jira-btn--default:hover {
-  background-color: #e2e8f0;
+  background-color: #f8fafc;
+  border-color: #94a3b8;
 }
 
 .jira-btn--subtle {
@@ -110,30 +171,154 @@
   color: #64748b;
   border: 1px solid #e2e8f0;
 }
+
 .jira-btn--subtle:hover {
   background-color: #f1f5f9;
   color: #0f172a;
 }
 
 /* ==========================================================================
-   2. Jira Filter Bar (Compact Single-Row 36px Toolbar)
+   TIER 2: WORKFLOW STAGE PROGRESS & SLA STRIP (MATCHING LIFECYCLE FLOW)
+   ========================================================================== */
+.kanban-flow-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.kanban-flow-stages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kanban-flow-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  cursor: default;
+}
+
+.kanban-flow-stage--active {
+  border-color: #0052cc;
+  background-color: #f0f7ff;
+  color: #0052cc;
+}
+
+.kanban-flow-stage--done {
+  border-color: #a7f3d0;
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.kanban-stage-num {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kanban-flow-stage--active .kanban-stage-num {
+  background-color: #0052cc;
+  color: #ffffff;
+}
+
+.kanban-flow-stage--done .kanban-stage-num {
+  background-color: #059669;
+  color: #ffffff;
+}
+
+.kanban-stage-count {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+}
+
+.kanban-stage-count--wip {
+  background-color: #deebff;
+  color: #0052cc;
+}
+
+.kanban-flow-arrow {
+  font-size: 11px;
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+}
+
+.kanban-flow-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kanban-flow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+.kanban-flow-pill--sla {
+  font-weight: 600;
+  color: #047857;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.kanban-flow-pill--goal {
+  color: #475569;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+/* ==========================================================================
+   2. FILTER TOOLBAR
    ========================================================================== */
 .kanban-toolbar {
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-border, #dfe1e6);
-  padding: 3px 16px;
+  padding: 6px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
-  min-height: 36px;
+  min-height: 40px;
 }
 
 .kanban-toolbar__left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
   overflow-x: auto;
@@ -143,7 +328,7 @@
   display: none;
 }
 
-/* Compact Search Box */
+/* Search Box */
 .kanban-search {
   position: relative;
   display: flex;
@@ -153,7 +338,7 @@
 
 .kanban-search__icon {
   position: absolute;
-  left: 7px;
+  left: 9px;
   color: var(--color-text-subtle, #94a3b8);
   pointer-events: none;
   display: flex;
@@ -161,19 +346,19 @@
 }
 
 .kanban-search__input {
-  height: 26px;
-  padding: 0 22px 0 26px;
-  font-size: 11.5px;
+  height: 28px;
+  padding: 0 24px 0 28px;
+  font-size: 12px;
   background-color: #f8fafc;
   border: 1px solid var(--color-border, #dfe1e6);
   border-radius: var(--radius-sm, 4px);
-  width: 125px;
+  width: 160px;
   color: var(--color-text-heading, #0f172a);
   outline: none;
   transition: width var(--transition-fast, 120ms ease), border-color var(--transition-fast, 120ms ease);
 }
 .kanban-search__input:focus {
-  width: 160px;
+  width: 200px;
   background-color: #ffffff;
   border-color: var(--color-border-focus, #4c9aff);
   box-shadow: 0 0 0 2px rgba(76, 154, 255, 0.2);
@@ -181,25 +366,25 @@
 
 .kanban-search__clear {
   position: absolute;
-  right: 5px;
+  right: 6px;
   color: var(--color-text-subtle, #94a3b8);
   cursor: pointer;
 }
 
-/* Jira Assignee Avatar Filter Cluster */
+/* Assignee Avatar Cluster */
 .kanban-avatar-cluster {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 1px 2px;
+  gap: 3px;
+  padding: 2px 4px;
   border-radius: var(--radius-full, 9999px);
   background-color: rgba(9, 30, 66, 0.04);
   flex-shrink: 0;
 }
 
 .kanban-avatar-btn {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--radius-full, 9999px);
   border: 1.5px solid transparent;
   cursor: pointer;
@@ -208,6 +393,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0;
 }
 .kanban-avatar-btn img {
   width: 100%;
@@ -222,19 +412,19 @@
   box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.25);
 }
 
-/* Quick Filter Pills (Jira Quick Filters) */
+/* Quick Filter Pills */
 .kanban-pills {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .kanban-pill {
-  padding: 0 7px;
-  height: 22px;
+  padding: 0 8px;
+  height: 24px;
   border-radius: var(--radius-sm, 4px);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--color-text-body, #334155);
   background-color: rgba(9, 30, 66, 0.04);
@@ -243,73 +433,60 @@
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   transition: all var(--transition-fast, 120ms ease);
 }
+
 .kanban-pill:hover {
   background-color: rgba(9, 30, 66, 0.08);
+  color: var(--color-text-heading, #0f172a);
 }
+
 .kanban-pill--active {
-  background-color: var(--jira-blue-subtle, #deebff) !important;
+  background-color: #deebff !important;
   color: var(--jira-blue, #0052cc) !important;
-  font-weight: 600;
+  font-weight: 700;
   border-color: #b3d4ff !important;
 }
 
-.kanban-pill--rose.kanban-pill--active {
-  background-color: #ffebe6 !important;
-  color: #bf2600 !important;
-  border-color: #ffbdad !important;
+.kanban-pill--rose {
+  color: #bf2600;
 }
 
-/* Right Toolbar Items */
 .kanban-toolbar__right {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .kanban-select {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-body, #334155);
+  height: 28px;
+  padding: 0 8px;
+  font-size: 11.5px;
   background-color: #ffffff;
   border: 1px solid var(--color-border, #dfe1e6);
   border-radius: var(--radius-sm, 4px);
-  padding: 0 6px;
-  height: 24px;
-  max-width: 140px;
-  cursor: pointer;
+  color: var(--color-text-heading, #0f172a);
   outline: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: border-color var(--transition-fast, 120ms ease);
+  cursor: pointer;
+  max-width: 180px;
 }
 .kanban-select:focus {
   border-color: var(--color-border-focus, #4c9aff);
-}
-
-#kanbanEpicSelect {
-  max-width: 140px;
-}
-
-#kanbanSwimlaneSelect {
-  max-width: 125px;
 }
 
 .kanban-swimlane-control {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--color-text-subtle, #64748b);
   flex-shrink: 0;
 }
 
 .kanban-stats {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--color-text-subtle, #64748b);
   display: flex;
   align-items: center;
@@ -321,24 +498,24 @@
 }
 
 /* ==========================================================================
-   3. Board Canvas & Columns (Full-Height Locked Columns with Card Scroll)
+   3. BOARD CANVAS & SPATIOUS COLUMNS (NO CRAMPING)
    ========================================================================== */
 .kanban-canvas {
   flex: 1;
   min-height: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 8px 16px 10px 16px;
+  padding: 12px 20px 14px 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 /* Swimlane Container */
 .kanban-swimlane {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
 }
@@ -347,7 +524,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3px 8px;
+  padding: 4px 10px;
   background-color: rgba(9, 30, 66, 0.04);
   border-radius: var(--radius-sm, 4px);
   border: 1px solid var(--color-border, #dfe1e6);
@@ -362,8 +539,8 @@
 .kanban-swimlane__left {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
+  gap: 8px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--color-text-heading, #0f172a);
 }
@@ -376,31 +553,35 @@
 }
 
 .kanban-swimlane__badge {
-  font-size: 10px;
+  font-size: 10.5px;
   font-family: var(--font-mono);
   font-weight: 600;
-  padding: 1px 5px;
+  padding: 1px 6px;
   border-radius: 8px;
   background-color: #ffffff;
   border: 1px solid var(--color-border, #dfe1e6);
   color: var(--color-text-subtle, #64748b);
 }
 
-/* Columns Grid Container (Fills viewport height) */
+/* Columns Grid Container (Spacious Flex with Min Width 320px per Col) */
 .kanban-columns-row {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(225px, 1fr));
-  gap: 8px;
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  min-width: 100%;
   height: 100%;
   min-height: 0;
   flex: 1;
   align-items: stretch;
 }
 
-/* Kanban Column (Jira Style) */
+/* Kanban Column (Width 320px - Plenty of Room for Cards) */
 .kanban-col {
+  width: 320px;
+  min-width: 320px;
+  max-width: 350px;
   background-color: #f4f5f7;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -408,6 +589,7 @@
   max-height: 100%;
   border: 1px solid var(--color-border, #dfe1e6);
   overflow: hidden;
+  flex-shrink: 0;
   transition: border-color var(--transition-fast, 120ms ease), background-color var(--transition-fast, 120ms ease);
 }
 
@@ -423,11 +605,11 @@
 
 /* Column Header */
 .kanban-col__header {
-  padding: 5px 8px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid transparent;
+  border-bottom: 2.5px solid transparent;
   background-color: #f4f5f7;
   flex-shrink: 0;
   user-select: none;
@@ -446,8 +628,24 @@
   gap: 6px;
 }
 
+.kanban-col__step-num {
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  background-color: #64748b;
+  width: 17px;
+  height: 17px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kanban-col__header--progress .kanban-col__step-num { background-color: #0052cc; }
+.kanban-col__header--done .kanban-col__step-num { background-color: #36b37e; }
+
 .kanban-col__title {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
   color: var(--color-text-heading, #0f172a);
   text-transform: uppercase;
@@ -456,9 +654,9 @@
 
 .kanban-col__wip-badge {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
-  padding: 1px 5px;
+  padding: 1px 6px;
   border-radius: 8px;
   background-color: rgba(9, 30, 66, 0.08);
   color: var(--color-text-subtle, #64748b);
@@ -471,45 +669,48 @@
 }
 
 .kanban-col__wip-alert {
-  padding: 3px 6px;
-  margin: 0 6px 4px 6px;
+  padding: 4px 8px;
+  margin: 0 8px 6px 8px;
   background-color: #ffebe6;
   border: 1px solid #ffbdad;
-  border-radius: var(--radius-xs, 3px);
+  border-radius: var(--radius-xs, 4px);
   color: #bf2600;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .kanban-col__add-btn {
   color: var(--color-text-subtle, #64748b);
-  padding: 2px;
-  border-radius: var(--radius-xs, 3px);
+  padding: 3px;
+  border-radius: var(--radius-xs, 4px);
   display: flex;
   align-items: center;
-  transition: background-color var(--transition-fast, 120ms ease), color var(--transition-fast, 120ms ease);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast, 120ms ease);
 }
 .kanban-col__add-btn:hover {
   background-color: rgba(9, 30, 66, 0.08);
   color: var(--color-text-heading, #0f172a);
 }
 
-/* Cards List Inside Column (Independently Scrollable with Custom Scrollbar) */
+/* Cards List Inside Column */
 .kanban-col__cards {
-  padding: 6px 8px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
 }
 
 .kanban-col__cards::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .kanban-col__cards::-webkit-scrollbar-track {
   background: transparent;
@@ -523,9 +724,12 @@
 }
 
 .kanban-col__empty {
-  padding: 24px 8px;
+  padding: 36px 12px;
   text-align: center;
-  color: var(--color-text-disabled, #a5b2c6);
-  font-size: 11px;
-  font-style: italic;
+  color: var(--color-text-disabled, #94a3b8);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }

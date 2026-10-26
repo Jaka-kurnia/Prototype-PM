@@ -41,7 +41,7 @@ export class TaskListView {
   getPriorityBadge(priority) {
     switch (priority) {
       case 'Hotfix':
-        return '<span style="color: #bf2600; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🔥 Hotfix</span>';
+        return '<span style="color: #bf2600; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class="fi fi-rr-flame"></i> Hotfix</span>';
       case 'Tinggi':
         return '<span style="color: #de350b; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">▲ Tinggi</span>';
       case 'Sedang':

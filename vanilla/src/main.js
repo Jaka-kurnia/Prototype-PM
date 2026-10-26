@@ -21,6 +21,7 @@ import { CrmDealsView } from './components/crm/CrmDealsView.js';
 import { HrTeamView } from './components/hr/HrTeamView.js';
 import { GithubSettingsView } from './components/settings/GithubSettingsView.js';
 import { ClientPortalView } from './components/client/ClientPortalView.js';
+import { ProjectModuleView } from './components/project/ProjectModuleView.js';
 
 // Modals
 import { TaskDetailModal } from './components/TaskDetailModal.js';
@@ -71,6 +72,10 @@ class App {
       onOpenIntakeModal: () => store.openIntakeModal(),
       onSelectInvoice: () => store.setActiveTab('finance')
     });
+    const projectModuleView = new ProjectModuleView({
+      onSelectTask: (task) => store.openTaskDetail(task),
+      onOpenCreateTask: () => store.openCreateTaskModal()
+    });
 
     // 3. Instantiate modals
     const taskDetailModal = new TaskDetailModal();
@@ -100,6 +105,7 @@ class App {
       hrTeamView,
       githubSettingsView,
       clientPortalView,
+      projectModuleView,
       taskDetailModal,
       createTaskModal,
       intakeSimulatorModal,
@@ -161,7 +167,7 @@ class App {
       }
     });
 
-    console.info('🚀 Project Manjer (Atlassian Jira Cloud UX Edition) successfully initialized.');
+    console.info('[Project Manjer] Atlassian Jira Cloud UX Edition successfully initialized.');
   }
 
   handleRoute(state) {
@@ -185,6 +191,9 @@ class App {
     }
 
     switch (activeTab) {
+      case 'project':
+        this.viewportContent.appendChild(this.components.projectModuleView.getElement());
+        break;
       case 'kanban':
         this.viewportContent.appendChild(this.components.kanbanBoard.getElement());
         break;

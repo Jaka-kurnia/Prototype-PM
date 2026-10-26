@@ -368,7 +368,7 @@ export class TaskDetailModal {
                         ${phase.label}
                       </div>
                       <div style="font-size: 9px; margin-top: 2px; opacity: 0.85;">
-                        ${phase.active ? '● Sedang Aktif' : phase.done ? '✓ Tuntas' : 'Klik untuk pindah'}
+                        ${phase.active ? 'Sedang Aktif' : phase.done ? '<i class="fi fi-rr-check"></i> Tuntas' : 'Klik untuk pindah'}
                       </div>
                     </div>
                   </button>
@@ -761,7 +761,7 @@ ${currentTask.prDiff.split('\n').map(line => {
 
               ${progressPercent === 100 && totalSubtasksCount > 0 ? `
                 <div class="subtask-celebration-banner">
-                  <span style="color: #059669; font-weight: bold;">✓</span>
+                  <i class="fi fi-rr-check" style="color: #059669; font-weight: bold;"></i>
                   <span><strong>Checklist 100% Tuntas:</strong> Seluruh kriteria subtask telah selesai diverifikasi.</span>
                 </div>
               ` : ''}
@@ -903,10 +903,10 @@ ${currentTask.prDiff.split('\n').map(line => {
             <div class="jira-meta-row">
               <span class="jira-meta-label">Prioritas</span>
               <select id="detailPrioritySelect" style="padding: 6px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid #dfe1e6; background: white; color: #172b4d;">
-                <option value="Hotfix" ${currentTask.priority === 'Hotfix' ? 'selected' : ''}>🔥 Hotfix (Mendesak)</option>
-                <option value="Tinggi" ${currentTask.priority === 'Tinggi' ? 'selected' : ''}>▲ Tinggi</option>
-                <option value="Sedang" ${currentTask.priority === 'Sedang' ? 'selected' : ''}>■ Sedang</option>
-                <option value="Rendah" ${currentTask.priority === 'Rendah' ? 'selected' : ''}>▼ Rendah</option>
+                <option value="Hotfix" ${currentTask.priority === 'Hotfix' ? 'selected' : ''}>Hotfix (Mendesak)</option>
+                <option value="Tinggi" ${currentTask.priority === 'Tinggi' ? 'selected' : ''}>Tinggi</option>
+                <option value="Sedang" ${currentTask.priority === 'Sedang' ? 'selected' : ''}>Sedang</option>
+                <option value="Rendah" ${currentTask.priority === 'Rendah' ? 'selected' : ''}>Rendah</option>
               </select>
             </div>
 
@@ -995,7 +995,7 @@ ${currentTask.prDiff.split('\n').map(line => {
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <span style="color: #5e6c84;">CI Status:</span>
-                  <span style="font-weight: 600; color: #006644;">✓ 6/6 Tests Passing</span>
+                  <span style="font-weight: 600; color: #006644;"><i class="fi fi-rr-check"></i> 6/6 Tests Passing</span>
                 </div>
               </div>
             </div>
@@ -1325,13 +1325,13 @@ ${currentTask.prDiff.split('\n').map(line => {
         if (isNowAllDone) {
           if (['In Progress', 'Perlu Manual', 'Diperbaiki Agen', 'Dianalisis'].includes(currentTask.status)) {
             store.updateTaskStatus(currentTask.id, 'Menunggu Persetujuan', 'Seluruh checklist subtask tuntas 100%. Diajukan untuk Code Review PR.');
-            store.addToast('success', 'Checklist 100% Tuntas! 🚀', 'Semua subtask selesai! Tugas otomatis berpindah ke tahap "Review PR / Persetujuan".');
+            store.addToast('success', 'Checklist 100% Tuntas!', 'Semua subtask selesai! Tugas otomatis berpindah ke tahap "Review PR / Persetujuan".');
           } else if (currentTask.status === 'Menunggu Persetujuan') {
             store.updateTaskStatus(currentTask.id, 'QA/Testing', 'PR telah lolos verifikasi subtask, masuk ke QA Staging.');
-            store.addToast('success', 'Masuk Pengujian QA 🧪', 'Tugas otomatis beralih ke tahap QA/Testing.');
+            store.addToast('success', 'Masuk Pengujian QA', 'Tugas otomatis beralih ke tahap QA/Testing.');
           } else if (['QA/Testing', 'Deploy Staging', 'Disetujui'].includes(currentTask.status)) {
             store.updateTaskStatus(currentTask.id, 'Selesai', 'Seluruh pengujian subtask QA selesai.');
-            store.addToast('success', 'Tugas Selesai & Terverifikasi! 🎉', 'Tugas otomatis berpindah ke kolom Selesai.');
+            store.addToast('success', 'Tugas Selesai & Terverifikasi!', 'Tugas otomatis berpindah ke kolom Selesai.');
           }
           return;
         }
@@ -1748,9 +1748,9 @@ ${currentTask.prDiff.split('\n').map(line => {
             durationMs: 480,
             logs: [
               'PASS test/unit/manualPatch.test.ts',
-              '✓ reproduces original bug failure and asserts fixed state (38ms)',
-              '✓ smoke test on adjacent modules passes without side-effect (65ms)',
-              '✓ lint and typecheck clean (0 errors)'
+              'reproduces original bug failure and asserts fixed state (38ms)',
+              'smoke test on adjacent modules passes without side-effect (65ms)',
+              'lint and typecheck clean (0 errors)'
             ]
           }
         });

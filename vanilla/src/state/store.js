@@ -73,7 +73,7 @@ class Store {
       notifications: [
         {
           id: 'notif-init-1',
-          title: '🔔 [Finance] Invoice DP Kick-Off Disetujui',
+          title: '[Finance] Invoice DP Kick-Off Disetujui',
           message: 'Invoice INV/2026/10/LIB-001 (Termin DP 30%) untuk Perpustakaan Digital telah diverifikasi dan lunas.',
           type: 'finance',
           timestamp: new Date(Date.now() - 3600000 * 24).toISOString(),
@@ -84,7 +84,7 @@ class Store {
         },
         {
           id: 'notif-init-2',
-          title: '💼 [CRM] Closing Proyek Perpustakaan Digital',
+          title: '[CRM] Closing Proyek Perpustakaan Digital',
           message: 'Deal DEAL-PERPUS-01 dikonversi ke Proyek Engineering. Pipeline termin 1, 2, 3 tercatat.',
           type: 'crm',
           timestamp: new Date(Date.now() - 3600000 * 48).toISOString(),
@@ -471,8 +471,10 @@ class Store {
     this.addToast('info', 'Subtask Dihapus', 'Subtask telah dihapus dari tiket.');
   }
 
-  // --- CRM Deal Execution & Module Breakdown ---
-  convertCrmDealToProject(dealId, options = {}) {
+  // --- CRM Deal Execution & Module Breakdown (varian dengan invoice termin & notifikasi) ---
+  // CATATAN: sebelumnya method ini bernama sama dengan convertCrmDealToProject di bagian
+  // "CRM & Engineering Handover" sehingga tertimpa (dead code). Diganti nama agar tidak bentrok.
+  convertCrmDealToProjectWithInvoices(dealId, options = {}) {
     const deal = (this.state.crmDeals || []).find((d) => d.id === dealId);
     if (!deal) {
       this.addToast('error', 'Deal Tidak Ditemukan', 'Gagal mengeksekusi deal.');
@@ -671,7 +673,7 @@ class Store {
     const newNotifications = [
       {
         id: `notif-${Date.now()}-finance`,
-        title: `💵 [Finance] Tagihan Termin DP 30% Diterbitkan`,
+        title: `[Finance] Tagihan Termin DP 30% Diterbitkan`,
         message: `Invoice DP ${projectCode}-001 senilai ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalContractValue * 0.3 * 1.11)} untuk proyek "${projectName}" siap ditagihkan ke klien.`,
         type: 'finance',
         timestamp: new Date().toISOString(),
@@ -682,7 +684,7 @@ class Store {
       },
       {
         id: `notif-${Date.now()}-crm`,
-        title: `🎉 [CRM] Deal Won Berhasil Dieksekusi!`,
+        title: `[CRM] Deal Won Berhasil Dieksekusi!`,
         message: `Deal "${deal.title}" resmi dieksekusi menjadi Proyek "${projectName}" (${projectCode}) dan dibagi menjadi ${modules.length} modul engineering.`,
         type: 'crm',
         timestamp: new Date().toISOString(),
@@ -704,7 +706,7 @@ class Store {
 
     this.addToast(
       'success',
-      '🚀 Proyek & Modul Berhasil Diinisialisasi!',
+      'Proyek & Modul Berhasil Diinisialisasi!',
       `Proyek "${projectName}" dibuat dengan ${modules.length} modul dan jadwal termin.`
     );
 
@@ -819,7 +821,7 @@ class Store {
 
     // 1. Notification for Finance
     this.addNotification({
-      title: `🔔 [Finance] Invoice Baru Diterima: ${newInvoice.invoiceNumber}`,
+      title: `[Finance] Invoice Baru Diterima: ${newInvoice.invoiceNumber}`,
       message: `Invoice termin ${params.percentage}% senilai ${formatRupiah(totalAmount)} untuk proyek "${project.name}" (Progres ${currentProgress}%) telah diterbitkan dan masuk ke antrean verifikasi Finance.`,
       type: 'finance',
       projectId: project.id,
@@ -830,7 +832,7 @@ class Store {
 
     // 2. Notification for CRM
     this.addNotification({
-      title: `💼 [CRM] Update Finansial Deal: ${project.name}`,
+      title: `[CRM] Update Finansial Deal: ${project.name}`,
       message: `Pipeline termin proyek "${project.name}" terupdate: Invoice ${newInvoice.invoiceNumber} (${params.percentage}%, ${formatRupiah(totalAmount)}) telah berhasil diajukan ke tim Finance.`,
       type: 'crm',
       projectId: project.id,
@@ -1030,7 +1032,7 @@ class Store {
 
     if (category === 'besar') {
       const diag = task.diagnosticPackage || {
-        summary: `🚨 DETEKSI RISIKO KRITIS: Bug tergolong EXPERT / BESAR (${orchestratorResult.bug_analysis}). Sesuai standar ERP Intelligent Orchestrator, AI DILARANG melakukan auto-commit ke Production. Tiket dieskalasikan ke Lead Developer dengan paket diagnostik lengkap.`,
+        summary: `DETEKSI RISIKO KRITIS: Bug tergolong EXPERT / BESAR (${orchestratorResult.bug_analysis}). Sesuai standar ERP Intelligent Orchestrator, AI DILARANG melakukan auto-commit ke Production. Tiket dieskalasikan ke Lead Developer dengan paket diagnostik lengkap.`,
         reproductionSteps: [
           '1. Jalankan concurrent stress test (50 RPS dengan K6) pada endpoint transaksi',
           '2. Dua request mencoba mengakses row resource yang sama secara simultan',
@@ -1093,16 +1095,16 @@ class Store {
           durationMs: 420,
           logs: [
             'PASS test/unit/businessLogic.test.ts',
-            '✓ should process valid input correctly (28ms)',
-            '✓ should prevent NaN floating point rounding error (15ms)',
-            '✓ should safely fallback when discount exceeds total (12ms)',
-            '✓ regression check: upstream billing unaffected (42ms)',
-            '✓ stress check: 500 payload iterations PASS (60ms)'
+            'should process valid input correctly (28ms)',
+            'should prevent NaN floating point rounding error (15ms)',
+            'should safely fallback when discount exceeds total (12ms)',
+            'regression check: upstream billing unaffected (42ms)',
+            'stress check: 500 payload iterations PASS (60ms)'
           ]
         }
       });
 
-      this.addToast('success', 'Bug Menengah Diperbaiki AI! 🚀', `Agen membuka ${prNum}. Semua regression test lolos (5/5).`);
+      this.addToast('success', 'Bug Menengah Diperbaiki AI!', `Agen membuka ${prNum}. Semua regression test lolos (5/5).`);
     } else {
       const prNum = `PR #${Math.floor(Math.random() * 80) + 10}`;
       const branch = orchestratorResult.github_workflow.feature_branch_name || `ai/fix-${task.key.toLowerCase()}-auto`;
@@ -1127,15 +1129,15 @@ class Store {
           durationMs: 280,
           logs: [
             'PASS test/components/DisplayView.test.tsx',
-            '✓ should render safe label when item is null (18ms)',
-            '✓ should trim whitespace from title (14ms)',
-            '✓ snapshot matches baseline (32ms)',
-            '✓ zero visual regression detected (40ms)'
+            'should render safe label when item is null (18ms)',
+            'should trim whitespace from title (14ms)',
+            'snapshot matches baseline (32ms)',
+            'zero visual regression detected (40ms)'
           ]
         }
       });
 
-      this.addToast('success', 'Bug Kecil Diperbaiki Otomatis! ⚡', `Agen AI langsung membuat patch ${prNum} untuk bug kecil.`);
+      this.addToast('success', 'Bug Kecil Diperbaiki Otomatis!', `Agen AI langsung membuat patch ${prNum} untuk bug kecil.`);
     }
   }
 
@@ -1246,7 +1248,7 @@ class Store {
       prDiff: `--- a/src/core/criticalService.ts\n+++ b/src/core/criticalService.ts\n@@ -50,6 +50,15 @@\n+// [HUMAN ENGINEER INTERVENTION - Commit: ${commitHash}]\n+// Solusi Arsitektur Terpilih: ${data.mitigationOption}\n+// Catatan Lead Developer: ${data.devNotes}\n+const safeLock = await acquireDistributedMutex(resourceKey, { timeoutMs: 2000 });\n+try {\n+  return await executeAtomicTransaction(payload);\n+} finally {\n+  await safeLock.release();\n+}`
     });
 
-    this.addToast('success', 'Perbaikan Bug Besar Berhasil! 🛡️', `Ditangani engineer manusia dengan mitigasi "${data.mitigationOption}".`);
+    this.addToast('success', 'Perbaikan Bug Besar Berhasil!', `Ditangani engineer manusia dengan mitigasi "${data.mitigationOption}".`);
   }
 
   deployToStaging(taskId) {

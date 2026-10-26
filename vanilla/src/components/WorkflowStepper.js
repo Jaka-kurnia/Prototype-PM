@@ -42,14 +42,14 @@ export class WorkflowStepper {
                 data-flow="flowB"
                 title="Alur Standar Penanganan Bug & QA Garansi"
               >
-                <span>🛡️</span> SOP Bug &amp; QA
+                <i class="fi fi-rr-shield-check"></i> SOP Bug &amp; QA
               </button>
               <button
                 class="workflow-stepper__segment-btn ${activeFlow === 'flowA' ? 'workflow-stepper__segment-btn--active' : ''}"
                 data-flow="flowA"
                 title="Alur CRM Closing menuju Proyek & Penagihan Termin"
               >
-                <span>💼</span> CRM → PM → Finance
+                <i class="fi fi-rr-briefcase"></i> CRM &rarr; PM &rarr; Finance
               </button>
             </div>
 

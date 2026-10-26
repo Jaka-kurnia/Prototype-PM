@@ -62,7 +62,7 @@ export class Sidebar {
       </button>
 
       <!-- Project Header Banner (Jira Style) -->
-      <div class="sidebar__project-header">
+      <div id="sidebarProjectHeader" class="sidebar__project-header" style="cursor: pointer;" title="Buka Modul Proyek">
         <div class="sidebar__project-avatar" title="${projName}">
           ${projCode.slice(0, 3)}
         </div>
@@ -77,6 +77,13 @@ export class Sidebar {
         <!-- 1. PLANNING (PERENCANAAN) -->
         <div class="sidebar__nav-section">
           <div class="sidebar__section-title">Perencanaan</div>
+
+          <button class="sidebar__nav-item ${state.activeTab === 'project' ? 'sidebar__nav-item--active' : ''}" data-tab="project" title="Modul Proyek (Overview, Tasks Kanban, Activity &amp; Tim)">
+            <div class="sidebar__nav-item-left">
+              <span class="sidebar__nav-item-icon"><i class="fi fi-rr-apps" style="font-size: 14px; display: inline-flex;"></i></span>
+              <span class="sidebar__nav-item-label">Modul Proyek</span>
+            </div>
+          </button>
           
           <button class="sidebar__nav-item ${state.activeTab === 'timeline' ? 'sidebar__nav-item--active' : ''}" data-tab="timeline" title="Timeline & Roadmap">
             <div class="sidebar__nav-item-left">
@@ -169,6 +176,14 @@ export class Sidebar {
   }
 
   attachEvents() {
+    // Project header click -> navigate to project module
+    const projectHeader = this.container.querySelector('#sidebarProjectHeader');
+    if (projectHeader) {
+      projectHeader.addEventListener('click', () => {
+        store.setActiveTab('project');
+      });
+    }
+
     // Collapse toggle button
     const collapseBtn = this.container.querySelector('#sidebarCollapseBtn');
     if (collapseBtn) {

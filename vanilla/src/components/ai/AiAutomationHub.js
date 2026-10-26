@@ -217,7 +217,7 @@ export class AiAutomationHub {
             <button class="kanban-pill ${this.categoryFilter === 'all' ? 'kanban-pill--active' : ''}" data-cat="all">Semua Bug (${bugTasks.length})</button>
             <button class="kanban-pill ${this.categoryFilter === 'kecil' ? 'kanban-pill--active' : ''}" data-cat="kecil">Bug Kecil (${smallBugs.length})</button>
             <button class="kanban-pill ${this.categoryFilter === 'menengah' ? 'kanban-pill--active' : ''}" data-cat="menengah">Bug Menengah (${mediumBugs.length})</button>
-            <button class="kanban-pill ${this.categoryFilter === 'besar' ? 'kanban-pill--active' : ''}" data-cat="besar">🔥 Bug Besar (${bigBugs.length})</button>
+            <button class="kanban-pill ${this.categoryFilter === 'besar' ? 'kanban-pill--active' : ''}" data-cat="besar"><i class="fi fi-rr-flame"></i> Bug Besar (${bigBugs.length})</button>
             <button class="kanban-pill ${this.categoryFilter === 'pr_review' ? 'kanban-pill--active' : ''}" data-cat="pr_review">Menunggu PR (${prReviewBugs.length})</button>
             <button class="kanban-pill ${this.categoryFilter === 'manual' ? 'kanban-pill--active' : ''}" data-cat="manual">Perlu Manual (${manualBugs.length})</button>
             <button class="kanban-pill ${this.categoryFilter === 'monitoring' ? 'kanban-pill--active' : ''}" data-cat="monitoring">Dipantau (${monitoredBugs.length})</button>
@@ -495,7 +495,7 @@ export class AiAutomationHub {
           <div style="padding: 12px 14px; border-radius: 10px; background: #faf5ff; border: 1px solid #e9d5ff; display: flex; justify-content: space-between; align-items: center;">
             <strong style="color: #581c87;">Status Verifikasi Staging QA:</strong>
             <span style="font-weight: 700; color: #059669;">
-              ${task.qaSignOff?.status === 'Passed' ? '✓ Lulus QA Sign-Off' : 'Belum Sign-Off'}
+              ${task.qaSignOff?.status === 'Passed' ? '<i class="fi fi-rr-check"></i> Lulus QA Sign-Off' : 'Belum Sign-Off'}
             </span>
           </div>
 

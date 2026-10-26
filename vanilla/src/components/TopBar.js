@@ -95,7 +95,7 @@ export class TopBar {
           <select id="topbarProjectSelect" class="topbar__project-select">
             ${state.projects.map((p) => `
               <option value="${p.id}" ${state.selectedProjectId === p.id ? 'selected' : ''}>
-                📁 ${p.code} · ${p.name}
+                ${p.code} · ${p.name}
               </option>
             `).join('')}
           </select>

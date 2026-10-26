@@ -1,19 +1,14 @@
 /**
  * KanbanBoard Component (100% Native Vanilla JS ES Module)
- * Modeled after Atlassian Jira Software Cloud Board:
- * - Breadcrumbs & Board Header with Star Favorite
- * - Global Board Search with Clear
- * - Jira Assignee Avatar Filter Cluster (1-click avatar filter)
- * - Jira Quick Filter Chips: "Tugas Saya", "Diperbarui < 48 Jam" (PRD 3.3), "Bug Hotfix", "PR Review", "Belum Ditugaskan"
- * - Epics Filter Dropdown
- * - Full Swimlanes Support (PRD 6.4):
- *   1. Tanpa Swimlane (Standard Columns)
- *   2. Berdasarkan Epic (Accordion with color bars & progress)
- *   3. Berdasarkan Assignee (Roster rows)
- *   4. Berdasarkan Prioritas (Hotfix, Tinggi, Sedang, Rendah)
- * - WIP Limits with Visual Alert Violation (PRD 6.4)
- * - HTML5 Native Drag & Drop with Auto Status Update
- * - Milestone Progress Invoice (> 10%) Modal Trigger
+ * Enhanced Atlassian Jira Software Cloud Board with:
+ * - Informative Multi-Tier Header:
+ *   1. Project Breadcrumbs, Board Title, Star Favorite, Sprint Badge, Dates & Actions
+ *   2. Workflow Stage Progress Strip (6 Stages: Backlog, To Do, In Progress, Review PR, QA Staging, Done)
+ *   3. Active Sprint Goal & SLA Bug Guarantee Status Pill
+ * - Quick Filter Bar: Search, Assignee Avatars, Flow Filter Pills, Epic Selector, Swimlane Selector
+ * - Spacious Column & Card layout (no cramped text)
+ * - 100% Flaticon Icons (Zero raw emojis)
+ * - Full Native Drag & Drop with reactive status updates
  */
 
 import { store } from '../state/store.js';
@@ -25,18 +20,21 @@ const KANBAN_COLUMNS = [
   {
     id: 'backlog',
     label: 'Backlog / Baru',
+    stepNumber: '1',
     statuses: ['Backlog', 'Baru'],
     headerClass: 'kanban-col__header--backlog'
   },
   {
     id: 'analysis_dev',
     label: 'Dianalisis & To Do',
+    stepNumber: '2',
     statuses: ['To Do', 'Dianalisis'],
     headerClass: 'kanban-col__header--analysis'
   },
   {
     id: 'in_progress',
     label: 'Pengerjaan (In Progress)',
+    stepNumber: '3',
     statuses: ['In Progress', 'Diperbaiki Agen', 'Perlu Manual'],
     headerClass: 'kanban-col__header--progress',
     limit: 6
@@ -44,6 +42,7 @@ const KANBAN_COLUMNS = [
   {
     id: 'review_approval',
     label: 'Review / Persetujuan PR',
+    stepNumber: '4',
     statuses: ['In Review', 'Menunggu Persetujuan', 'Disetujui'],
     headerClass: 'kanban-col__header--review',
     limit: 5
@@ -51,12 +50,14 @@ const KANBAN_COLUMNS = [
   {
     id: 'testing_deploy',
     label: 'QA & Deploy (Staging/Prod)',
+    stepNumber: '5',
     statuses: ['QA/Testing', 'Deploy Staging', 'Deploy Production', 'Dipantau'],
     headerClass: 'kanban-col__header--qa'
   },
   {
     id: 'done',
     label: 'Selesai & Diverifikasi',
+    stepNumber: '6',
     statuses: ['Selesai'],
     headerClass: 'kanban-col__header--done'
   }
@@ -71,7 +72,7 @@ export class KanbanBoard {
     // Local Board Controls State
     this.currentProjectId = store.getState().selectedProjectId;
     this.swimlaneMode = 'none'; // 'none' | 'epic' | 'assignee' | 'priority'
-    this.quickFilter = 'all'; // 'all' | 'my_issues' | 'recent_48h' | 'hotfix' | 'pr_review' | 'unassigned'
+    this.quickFilter = 'all'; // 'all' | 'my_issues' | 'recent_48h' | 'hotfix' | 'pr_review' | 'qa_phase' | 'unassigned'
     this.collapsedSwimlanes = new Set();
 
     this.milestoneModal = new CreateMilestoneInvoiceModal();
@@ -124,7 +125,6 @@ export class KanbanBoard {
 
       // Quick Filters
       if (this.quickFilter === 'my_issues') {
-        // Match current role or default dev
         const currentUserDevId = state.role === 'pm' ? 'user-pm' : state.role === 'qa' ? 'user-qa' : 'user-dev-1';
         if (task.assigneeId !== currentUserDevId) return false;
       } else if (this.quickFilter === 'recent_48h') {
@@ -136,6 +136,8 @@ export class KanbanBoard {
         if (!isHotfix) return false;
       } else if (this.quickFilter === 'pr_review') {
         if (task.status !== 'Menunggu Persetujuan' && task.status !== 'In Review') return false;
+      } else if (this.quickFilter === 'qa_phase') {
+        if (task.status !== 'QA/Testing' && task.status !== 'Deploy Staging') return false;
       } else if (this.quickFilter === 'unassigned') {
         if (task.assigneeId) return false;
       }
@@ -155,58 +157,166 @@ export class KanbanBoard {
     const projCode = activeProject ? activeProject.code : 'PROJ';
     const projName = activeProject ? activeProject.name : 'Sistem Software House';
 
+    // Active Sprint Info
+    const activeSprint = (state.sprints || []).find((s) => s.projectId === state.selectedProjectId && s.status === 'active') || {
+      name: 'Sprint 1 (Aktif)',
+      startDate: '2026-10-18',
+      endDate: '2026-11-01',
+      goal: 'Deliver REST API microservices katalog, Redis atomic lock untuk sirkulasi, dan OPAC React SPA'
+    };
+
+    // Calculate stage counts matching the 6 flow stages
+    const countBacklog = projectTasks.filter((t) => ['Backlog', 'Baru'].includes(t.status)).length;
+    const countTodo = projectTasks.filter((t) => ['To Do', 'Dianalisis'].includes(t.status)).length;
+    const countInProgress = projectTasks.filter((t) => ['In Progress', 'Diperbaiki Agen', 'Perlu Manual'].includes(t.status)).length;
+    const countReview = projectTasks.filter((t) => ['In Review', 'Menunggu Persetujuan', 'Disetujui'].includes(t.status)).length;
+    const countQA = projectTasks.filter((t) => ['QA/Testing', 'Deploy Staging', 'Deploy Production', 'Dipantau'].includes(t.status)).length;
+    const countDone = projectTasks.filter((t) => t.status === 'Selesai').length;
+
     this.container.innerHTML = `
-      <!-- 1. Jira Board Header -->
+      <!-- ========================================================
+           TIER 1: BOARD TITLE & WORKFLOW ACTION CONTROLS
+           ======================================================== -->
       <div class="kanban-board-header">
         <div class="kanban-board-breadcrumbs">
           <span>Proyek</span>
           <span>/</span>
           <span title="${projName}">${projName}</span>
           <span>/</span>
-          <span style="font-weight: 600; color: var(--color-text-heading);">${projCode} Board</span>
+          <span class="kanban-breadcrumb-code">${projCode} Board</span>
         </div>
 
         <div class="kanban-board-title-row">
-          <div class="kanban-board-title">
-            <span>${projCode} Board</span>
-            <button class="kanban-board-star-btn" title="Bintang Favorit">
-              ${Icons.star('w-3.5 h-3.5', 14)}
+          <div class="kanban-board-title-wrap">
+            <h1 class="kanban-board-title">${projCode} Board</h1>
+            
+            <button class="kanban-board-star-btn" title="Tandai Bintang Favorit">
+              ${Icons.star('w-4 h-4', 15)}
             </button>
+
+            <!-- Active Sprint Badge -->
+            <div class="kanban-sprint-badge" title="Sprint Aktif Saat Ini">
+              <i class="fi fi-rr-flag"></i>
+              <span>${activeSprint.name}</span>
+            </div>
+
+            <!-- Sprint Dates -->
+            <div class="kanban-sprint-dates" title="Periode Sprint">
+              <i class="fi fi-rr-calendar"></i>
+              <span>${activeSprint.startDate} &ndash; ${activeSprint.endDate}</span>
+            </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <button id="kanbanInvoiceBtn" class="jira-btn ${progress > 10 ? 'jira-btn--primary' : 'jira-btn--default'}" style="font-size: 11px; padding: 4px 10px; height: 28px;">
-              ${Icons.dollarSign('w-3 h-3', 12)}
+          <!-- Header Action Buttons -->
+          <div class="kanban-header-actions">
+            <!-- SOP Guide Button -->
+            <button id="kanbanSopGuideBtn" class="jira-btn jira-btn--default" title="Buka Dokumentasi SOP Alur Kerja">
+              <i class="fi fi-rr-book-alt"></i>
+              <span>Panduan SOP</span>
+            </button>
+
+            <!-- Simulator Button -->
+            <button id="kanbanSimulasiBtn" class="jira-btn jira-btn--default" title="Simulasi Laporan Klien Masuk (WhatsApp / Sentry)">
+              <i class="fi fi-rr-bolt" style="color: #f59e0b;"></i>
+              <span>Simulasi Tiket</span>
+            </button>
+
+            <!-- Invoice Milestone Button -->
+            <button id="kanbanInvoiceBtn" class="jira-btn ${progress > 10 ? 'jira-btn--primary' : 'jira-btn--default'}" title="Penerbitan Invoice Termin Proyek">
+              <i class="fi fi-rr-dollar"></i>
               <span>Invoice Termin (${progress}%)</span>
             </button>
 
-            <button id="kanbanAddTaskBtn" class="jira-btn jira-btn--primary" style="font-size: 11px; padding: 4px 12px; height: 28px;">
-              <span style="font-size: 14px; line-height: 1; font-weight: bold;">+</span>
+            <!-- Primary Create Ticket Button -->
+            <button id="kanbanAddTaskBtn" class="jira-btn jira-btn--primary" title="Buat Tiket Baru (Shortcut: 'c')">
+              <i class="fi fi-rr-plus"></i>
               <span>Buat Tiket</span>
+              <kbd class="kanban-btn-kbd">c</kbd>
             </button>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             TIER 2: WORKFLOW STAGE PROGRESS & SLA BANNER
+             ======================================================== -->
+        <div class="kanban-flow-strip">
+          <div class="kanban-flow-stages">
+            <div class="kanban-flow-stage" title="Tahap 1: Laporan baru dan backlog backlog produk">
+              <span class="kanban-stage-num">1</span>
+              <span class="kanban-stage-name">Backlog</span>
+              <span class="kanban-stage-count">${countBacklog}</span>
+            </div>
+            <i class="fi fi-rr-angle-small-right kanban-flow-arrow"></i>
+
+            <div class="kanban-flow-stage" title="Tahap 2: Tiket yang telah dianalisis arsitektur dan siap dieksekusi">
+              <span class="kanban-stage-num">2</span>
+              <span class="kanban-stage-name">To Do</span>
+              <span class="kanban-stage-count">${countTodo}</span>
+            </div>
+            <i class="fi fi-rr-angle-small-right kanban-flow-arrow"></i>
+
+            <div class="kanban-flow-stage kanban-flow-stage--active" title="Tahap 3: Sedang dikerjakan oleh developer (Batas WIP: 6)">
+              <span class="kanban-stage-num">3</span>
+              <span class="kanban-stage-name">In Progress</span>
+              <span class="kanban-stage-count kanban-stage-count--wip">${countInProgress}/6</span>
+            </div>
+            <i class="fi fi-rr-angle-small-right kanban-flow-arrow"></i>
+
+            <div class="kanban-flow-stage" title="Tahap 4: Pull Request kode menunggu persetujuan review lead">
+              <span class="kanban-stage-num">4</span>
+              <span class="kanban-stage-name">Review PR</span>
+              <span class="kanban-stage-count">${countReview}</span>
+            </div>
+            <i class="fi fi-rr-angle-small-right kanban-flow-arrow"></i>
+
+            <div class="kanban-flow-stage" title="Tahap 5: Pengujian QA di server staging &amp; load testing K6">
+              <span class="kanban-stage-num">5</span>
+              <span class="kanban-stage-name">QA Staging</span>
+              <span class="kanban-stage-count">${countQA}</span>
+            </div>
+            <i class="fi fi-rr-angle-small-right kanban-flow-arrow"></i>
+
+            <div class="kanban-flow-stage kanban-flow-stage--done" title="Tahap 6: Lolos UAT dan diverifikasi selesai">
+              <span class="kanban-stage-num">6</span>
+              <span class="kanban-stage-name">Selesai</span>
+              <span class="kanban-stage-count">${countDone}</span>
+            </div>
+          </div>
+
+          <div class="kanban-flow-info">
+            <span class="kanban-flow-pill kanban-flow-pill--sla" title="Ketentuan SLA S1 Respons 2 Jam &amp; Garansi 12 Bulan">
+              <i class="fi fi-rr-shield-check"></i>
+              <span>Garansi 12 Bulan Aktif</span>
+            </span>
+            <span class="kanban-flow-pill kanban-flow-pill--goal" title="Target Utama Sprint Ini">
+              <i class="fi fi-rr-target"></i>
+              <span><strong>Target:</strong> ${activeSprint.goal ? activeSprint.goal.slice(0, 75) + '...' : 'Selesaikan microservices katalog & OPAC React'}</span>
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- 2. Jira Filter Bar (Single-Row Proportional Toolbar) -->
+      <!-- ========================================================
+           TIER 3: FILTER & CONTROL TOOLBAR
+           ======================================================== -->
       <div class="kanban-toolbar">
         <div class="kanban-toolbar__left">
-          <!-- Search Box -->
+          <!-- Quick Search -->
           <div class="kanban-search">
             <span class="kanban-search__icon">${Icons.search('w-3.5 h-3.5', 13)}</span>
             <input
               type="text"
               id="kanbanSearchInput"
               class="kanban-search__input"
-              placeholder="Cari task..."
+              placeholder="Cari task, kode, atau isu..."
               value="${state.searchQuery}"
             />
             ${state.searchQuery ? `<span id="kanbanClearSearchBtn" class="kanban-search__clear">${Icons.x('w-3 h-3', 12)}</span>` : ''}
           </div>
 
           <!-- Assignee Avatar Filter Cluster -->
-          <div class="kanban-avatar-cluster" title="Filter berdasarkan Assignee">
-            <button class="kanban-avatar-btn ${state.filterAssignee === 'all' ? 'kanban-avatar-btn--active' : ''}" data-assignee="all" style="background: white; font-size: 9px; font-weight: bold; color: var(--color-text-subtle);" title="Semua Tim">
+          <div class="kanban-avatar-cluster" title="Filter berdasarkan Assignee Engineer">
+            <button class="kanban-avatar-btn ${state.filterAssignee === 'all' ? 'kanban-avatar-btn--active' : ''}" data-assignee="all" title="Semua Anggota Tim">
               ALL
             </button>
             ${state.teamMembers.map((m) => `
@@ -216,21 +326,22 @@ export class KanbanBoard {
             `).join('')}
           </div>
 
-          <!-- Quick Filters (Pills) -->
+          <!-- Quick Filter Pills -->
           <div class="kanban-pills">
-            <button class="kanban-pill ${this.quickFilter === 'all' ? 'kanban-pill--active' : ''}" data-quick-filter="all">Semua</button>
+            <button class="kanban-pill ${this.quickFilter === 'all' ? 'kanban-pill--active' : ''}" data-quick-filter="all">Semua (${projectTasks.length})</button>
             <button class="kanban-pill ${this.quickFilter === 'my_issues' ? 'kanban-pill--active' : ''}" data-quick-filter="my_issues">Tugas Saya</button>
-            <button class="kanban-pill ${this.quickFilter === 'recent_48h' ? 'kanban-pill--active' : ''}" data-quick-filter="recent_48h" title="Status Diperbarui < 48 Jam">⏱️ &lt; 48 Jam</button>
-            <button class="kanban-pill kanban-pill--rose ${this.quickFilter === 'hotfix' ? 'kanban-pill--active' : ''}" data-quick-filter="hotfix">🔥 Hotfix</button>
+            <button class="kanban-pill ${this.quickFilter === 'recent_48h' ? 'kanban-pill--active' : ''}" data-quick-filter="recent_48h" title="Status Diperbarui < 48 Jam"><i class="fi fi-rr-clock"></i> &lt; 48 Jam</button>
+            <button class="kanban-pill kanban-pill--rose ${this.quickFilter === 'hotfix' ? 'kanban-pill--active' : ''}" data-quick-filter="hotfix"><i class="fi fi-rr-flame"></i> Hotfix / S1</button>
             <button class="kanban-pill ${this.quickFilter === 'pr_review' ? 'kanban-pill--active' : ''}" data-quick-filter="pr_review">PR Review</button>
+            <button class="kanban-pill ${this.quickFilter === 'qa_phase' ? 'kanban-pill--active' : ''}" data-quick-filter="qa_phase">QA Staging</button>
           </div>
         </div>
 
         <div class="kanban-toolbar__right">
-          <!-- Epic Dropdown -->
+          <!-- Epic Selector -->
           ${projectEpics.length > 0 ? `
-            <select id="kanbanEpicSelect" class="kanban-select">
-              <option value="all">Semua Epic (${projectEpics.length})</option>
+            <select id="kanbanEpicSelect" class="kanban-select" title="Filter berdasarkan Modul Epik">
+              <option value="all">Semua Epik (${projectEpics.length})</option>
               ${projectEpics.map((ep) => `
                 <option value="${ep.id}" ${state.filterEpic === ep.id ? 'selected' : ''}>${ep.key}: ${ep.title}</option>
               `).join('')}
@@ -242,27 +353,29 @@ export class KanbanBoard {
             <span style="font-size: 11px; color: var(--color-text-subtle);">Swimlane:</span>
             <select id="kanbanSwimlaneSelect" class="kanban-select" style="font-weight: 600;">
               <option value="none" ${this.swimlaneMode === 'none' ? 'selected' : ''}>Tanpa Swimlane</option>
-              <option value="epic" ${this.swimlaneMode === 'epic' ? 'selected' : ''}>Epik</option>
-              <option value="assignee" ${this.swimlaneMode === 'assignee' ? 'selected' : ''}>Assignee</option>
-              <option value="priority" ${this.swimlaneMode === 'priority' ? 'selected' : ''}>Prioritas</option>
+              <option value="epic" ${this.swimlaneMode === 'epic' ? 'selected' : ''}>Berdasarkan Epik</option>
+              <option value="assignee" ${this.swimlaneMode === 'assignee' ? 'selected' : ''}>Berdasarkan Assignee</option>
+              <option value="priority" ${this.swimlaneMode === 'priority' ? 'selected' : ''}>Berdasarkan Prioritas</option>
             </select>
           </div>
 
-          <!-- Ticket Count Stats -->
+          <!-- Total Count Stats -->
           <div class="kanban-stats">
             <span><strong>${filteredTasks.length}</strong> tiket</span>
           </div>
 
-          <!-- Reset Filter -->
+          <!-- Reset Filter Button -->
           ${(state.searchQuery || state.filterAssignee !== 'all' || state.filterEpic !== 'all' || this.quickFilter !== 'all') ? `
-            <button id="kanbanResetBtn" class="jira-btn jira-btn--subtle" style="font-size: 10px; padding: 2px 6px; height: 24px;">
-              Reset
+            <button id="kanbanResetBtn" class="jira-btn jira-btn--subtle" style="font-size: 11px; padding: 3px 8px; height: 26px;">
+              Reset Filter
             </button>
           ` : ''}
         </div>
       </div>
 
-      <!-- 3. Board Canvas & Swimlanes Container -->
+      <!-- ========================================================
+           BOARD CANVAS & COLUMNS (SPACIOUS WIDE COLUMNS WITH SCROLL)
+           ======================================================== -->
       <div id="kanbanCanvasContainer" class="kanban-canvas"></div>
     `;
 
@@ -281,13 +394,11 @@ export class KanbanBoard {
     canvas.innerHTML = '';
 
     if (this.swimlaneMode === 'none') {
-      // Standard Columns Row
       const rowEl = document.createElement('div');
       rowEl.className = 'kanban-columns-row';
       this.renderColumnsInto(rowEl, filteredTasks, projectEpics);
       canvas.appendChild(rowEl);
     } else if (this.swimlaneMode === 'epic') {
-      // Swimlanes by Epic
       projectEpics.forEach((ep) => {
         const epTasks = filteredTasks.filter((t) => t.epicId === ep.id);
         const isCollapsed = this.collapsedSwimlanes.has(ep.id);
@@ -309,7 +420,6 @@ export class KanbanBoard {
         canvas.appendChild(swimlaneEl);
       });
 
-      // Issues without epic
       const noEpicTasks = filteredTasks.filter((t) => !t.epicId);
       if (noEpicTasks.length > 0) {
         const isCollapsed = this.collapsedSwimlanes.has('no-epic');
@@ -331,7 +441,6 @@ export class KanbanBoard {
         canvas.appendChild(swimlaneEl);
       }
     } else if (this.swimlaneMode === 'assignee') {
-      // Swimlanes by Assignee
       state.teamMembers.forEach((m) => {
         const mTasks = filteredTasks.filter((t) => t.assigneeId === m.id);
         if (mTasks.length === 0) return;
@@ -354,7 +463,6 @@ export class KanbanBoard {
         canvas.appendChild(swimlaneEl);
       });
     } else if (this.swimlaneMode === 'priority') {
-      // Swimlanes by Priority
       const priorities = ['Hotfix', 'Tinggi', 'Sedang', 'Rendah'];
       priorities.forEach((pri) => {
         const priTasks = filteredTasks.filter((t) => t.priority === pri);
@@ -447,32 +555,34 @@ export class KanbanBoard {
       colEl.innerHTML = `
         <div class="kanban-col__header ${col.headerClass}">
           <div class="kanban-col__title-wrapper">
+            <span class="kanban-col__step-num">${col.stepNumber}</span>
             <span class="kanban-col__title">${col.label}</span>
             <span class="kanban-col__wip-badge ${isOverWip ? 'kanban-col__wip-badge--over' : ''}">
               ${colTasks.length}${col.limit ? `/${col.limit}` : ''}
             </span>
           </div>
-          <button class="kanban-col__add-btn" title="Tambah task ke kolom ${col.label}">
-            <span style="font-size: 14px; font-weight: bold; line-height: 1;">+</span>
+          <button class="kanban-col__add-btn" title="Tambah tiket ke ${col.label}">
+            <i class="fi fi-rr-plus" style="font-size: 11px;"></i>
           </button>
         </div>
         ${isOverWip ? `
           <div class="kanban-col__wip-alert">
-            ${Icons.alertTriangle('w-3 h-3', 12)}
-            <span>Batas WIP terlampaui (Maks: ${col.limit})</span>
+            <i class="fi fi-rr-exclamation" style="font-size: 11px;"></i>
+            <span>Batas WIP terlampaui (Maksimal: ${col.limit} pekerjaan)</span>
           </div>
         ` : ''}
       `;
 
-      // Cards list
+      // Cards list container
       const cardsList = document.createElement('div');
       cardsList.className = 'kanban-col__cards';
 
       if (colTasks.length === 0) {
         cardsList.innerHTML = `
           <div class="kanban-col__empty">
+            <i class="fi fi-rr-box-open" style="font-size: 20px; color: #cbd5e1; margin-bottom: 4px;"></i>
             <span>Kolom Kosong</span>
-            <span style="font-size: 11px;">Drag tiket ke sini</span>
+            <span style="font-size: 11px; color: #94a3b8;">Drag tiket ke sini untuk memindahkan</span>
           </div>
         `;
       } else {
@@ -562,6 +672,27 @@ export class KanbanBoard {
       resetBtn.addEventListener('click', () => {
         this.quickFilter = 'all';
         store.resetFilters();
+      });
+    }
+
+    // SOP Guide button
+    const sopGuideBtn = this.container.querySelector('#kanbanSopGuideBtn');
+    if (sopGuideBtn) {
+      sopGuideBtn.addEventListener('click', () => {
+        const sopModal = document.querySelector('.sop-guide-modal') || document.querySelector('.modal-dialog--sop');
+        if (sopModal) {
+          sopModal.closest('.modal-overlay').classList.add('modal-overlay--open');
+        } else {
+          store.addToast('info', 'Panduan SOP', 'Buku panduan alur kerja software house dibuka.');
+        }
+      });
+    }
+
+    // Simulasi button
+    const simulasiBtn = this.container.querySelector('#kanbanSimulasiBtn');
+    if (simulasiBtn) {
+      simulasiBtn.addEventListener('click', () => {
+        store.openIntakeModal();
       });
     }
 

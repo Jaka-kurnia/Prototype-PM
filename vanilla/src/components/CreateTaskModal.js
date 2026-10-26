@@ -80,10 +80,10 @@ export class CreateTaskModal {
     const projectEpics = state.epics.filter((e) => e.projectId === this.projectId);
 
     const priorityOptions = [
-      { value: 'Hotfix', label: '🔥 Hotfix', colorClass: 'priority-hotfix' },
-      { value: 'Tinggi', label: '▲ Tinggi', colorClass: 'priority-tinggi' },
-      { value: 'Sedang', label: '■ Sedang', colorClass: 'priority-sedang' },
-      { value: 'Rendah', label: '▼ Rendah', colorClass: 'priority-rendah' }
+      { value: 'Hotfix', label: 'Hotfix', colorClass: 'priority-hotfix' },
+      { value: 'Tinggi', label: 'Tinggi', colorClass: 'priority-tinggi' },
+      { value: 'Sedang', label: 'Sedang', colorClass: 'priority-sedang' },
+      { value: 'Rendah', label: 'Rendah', colorClass: 'priority-rendah' }
     ];
 
     this.container.innerHTML = `

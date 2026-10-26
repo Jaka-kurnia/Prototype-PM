@@ -127,7 +127,7 @@ export class GithubSettingsView {
           ${this.connectionStatus.tested ? `
             <div style="padding: 10px 14px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #166534;">
               <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-weight: bold;">✓</span>
+                <i class="fi fi-rr-check" style="font-weight: bold; color: #166534;"></i>
                 <span>Koneksi GitHub API Berhasil · Latency: <strong>${this.connectionStatus.latencyMs}ms</strong> · Rate-Limit: <strong>${this.connectionStatus.rateLimitRemaining}/5000</strong></span>
               </div>
               <span style="font-family: var(--font-mono); font-size: 10px; color: #15803d;">Scopes: ${this.connectionStatus.scopes.slice(0, 3).join(', ')}...</span>
@@ -244,7 +244,7 @@ export class GithubSettingsView {
                   <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 700; padding: 2px 8px; border-radius: 4px; background: white; border: 1px solid #cbd5e1; color: #334155;">
                     write access
                   </span>
-                  <span style="font-size: 11px; color: #059669; font-weight: 600;">✓ Synced</span>
+                  <span style="font-size: 11px; color: #059669; font-weight: 600;"><i class="fi fi-rr-check"></i> Synced</span>
                 </div>
               </div>
             `).join('')}

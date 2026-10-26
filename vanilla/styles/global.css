@@ -288,3 +288,12 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: #a5b2c6;
 }
+
+/* Flaticon UIcons Global Alignment & Crisp Rendering */
+i.fi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}

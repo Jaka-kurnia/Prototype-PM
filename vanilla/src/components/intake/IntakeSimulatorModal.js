@@ -341,7 +341,7 @@ export class IntakeSimulatorModal {
 
             this.waMessages.push({
               sender: 'bot',
-              text: `✅ Laporan diterima! Tiket ${task.key} telah dibuat untuk proyek ${proj.name}. AI Automation Hub sedang menganalisis akar masalah.`,
+              text: `Laporan diterima! Tiket ${task.key} telah dibuat untuk proyek ${proj.name}. AI Automation Hub sedang menganalisis akar masalah.`,
               time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
             });
             this.render();
@@ -349,7 +349,7 @@ export class IntakeSimulatorModal {
           } else {
             this.waMessages.push({
               sender: 'bot',
-              text: '⚠️ Format tidak lengkap. Mohon sertakan kode proyek di awal pesan (Contoh: `#POS-KLN printer kasir tidak merespon`).',
+              text: 'Format tidak lengkap. Mohon sertakan kode proyek di awal pesan (Contoh: `#POS-KLN printer kasir tidak merespon`).',
               time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
             });
             this.render();

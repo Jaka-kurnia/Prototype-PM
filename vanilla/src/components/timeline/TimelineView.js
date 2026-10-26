@@ -206,13 +206,13 @@ export class TimelineView {
           <!-- Quick Project Switcher Pills -->
           <div class="timeline-project-pills">
             <button class="tl-proj-pill ${this.activeProjectFilter === 'proj-perpustakaan' ? 'tl-proj-pill--active' : ''}" data-proj="proj-perpustakaan">
-              <span>📚</span> Perpustakaan Digital
+              <i class="fi fi-rr-book-alt" style="margin-right: 4px;"></i> Perpustakaan Digital
             </button>
             <button class="tl-proj-pill ${this.activeProjectFilter === 'proj-futsal' ? 'tl-proj-pill--active' : ''}" data-proj="proj-futsal">
-              <span>⚽</span> Arena Futsal Pro
+              <i class="fi fi-rr-football" style="margin-right: 4px;"></i> Arena Futsal Pro
             </button>
             <button class="tl-proj-pill ${this.activeProjectFilter === 'proj-1' ? 'tl-proj-pill--active' : ''}" data-proj="proj-1">
-              <span>☕</span> POS Kopi Kenangan
+              <i class="fi fi-rr-coffee" style="margin-right: 4px;"></i> POS Kopi Kenangan
             </button>
             <button class="tl-proj-pill ${this.activeProjectFilter === 'all' ? 'tl-proj-pill--active' : ''}" data-proj="all">
               Semua (3 Proyek)

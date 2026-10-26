@@ -255,14 +255,14 @@ export class BacklogView {
                   Tugas Saya
                 </button>
                 <button class="jira-filter-chip ${this.filterType === 'Bug' ? 'active' : ''}" id="filterBugBtn">
-                  🔥 Bug &amp; Hotfix
+                  <i class="fi fi-rr-flame"></i> Bug &amp; Hotfix
                 </button>
               </div>
 
               ${this.filterEpic !== 'all' ? `
                 <div style="font-size: 11px; font-weight: 600; color: #0052cc; background: #deebff; padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
                   <span>Filter Epik: ${projectEpics.find(e => e.id === this.filterEpic)?.title || 'Dipilih'}</span>
-                  <button id="clearEpicFilterBtn" style="border: none; background: none; color: #0052cc; cursor: pointer; padding: 0;">✕</button>
+                  <button id="clearEpicFilterBtn" style="border: none; background: none; color: #0052cc; cursor: pointer; padding: 0;"><i class="fi fi-rr-cross"></i></button>
                 </div>
               ` : ''}
             </div>
@@ -311,7 +311,7 @@ export class BacklogView {
                     <div class="jira-workload-card__meta">
                       <span>${mTasks.length} tiket</span>
                       <span style="font-family: var(--font-mono); font-weight: 700; color: ${isOverloaded ? '#bf2600' : '#172b4d'};">
-                        ${mHours}h / ${capLimit}h ${isOverloaded ? '⚠️ Overload' : ''}
+                        ${mHours}h / ${capLimit}h ${isOverloaded ? '<i class="fi fi-rr-triangle-warning"></i> Overload' : ''}
                       </span>
                     </div>
 

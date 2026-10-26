@@ -107,7 +107,7 @@ export function createTaskCard(task, members, epics, onClick) {
       <span class="task-card__epic-badge" style="background-color: ${epic.color}15; color: ${epic.color}; border: 1px solid ${epic.color}35;" title="Modul Epic: ${epic.title}">
         ${epic.key} · ${epic.title}
       </span>
-      ${task.priority === 'Hotfix' ? '<span class="task-card__hotfix-pill">🔥 Blocker</span>' : ''}
+      ${task.priority === 'Hotfix' ? '<span class="task-card__hotfix-pill"><i class="fi fi-rr-flame"></i> Blocker</span>' : ''}
     </div>
   ` : '';
 
@@ -176,7 +176,7 @@ export function createTaskCard(task, members, epics, onClick) {
       <div class="task-card__footer-left">
         ${typeIconHtml}
         <span class="task-card__key">${task.key}</span>
-        ${totalSubtasks > 0 ? `<span class="task-card__subtask-count" title="Subtask selesai">✓ ${completedSubtasks}/${totalSubtasks}</span>` : ''}
+        ${totalSubtasks > 0 ? `<span class="task-card__subtask-count" title="Subtask selesai"><i class="fi fi-rr-check"></i> ${completedSubtasks}/${totalSubtasks}</span>` : ''}
       </div>
       <div class="task-card__footer-right">
         ${estimateBadge}

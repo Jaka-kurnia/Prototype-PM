@@ -38,7 +38,7 @@ export class CrmDealsView {
         id: 'perpustakaan_microservices',
         name: 'Sistem Perpustakaan Digital Kampus (Laravel Microservices & React SPA)',
         badge: 'Microservices & Edu Tech',
-        icon: '📚',
+        icon: 'fi-rr-book-alt',
         summary: 'Arsitektur microservices: Microservice Katalog Laravel 11, Engine Sirkulasi & Denda Redis Mutex, Portal OPAC React 19, API Gateway Traefik, WhatsApp Reminder, dan Testing QA K6/Playwright.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Microservice Katalog Buku, Pengarang & ISBN (Laravel Backend)', description: 'REST API microservice buku dengan Laravel 11, skema PostgreSQL, Redis caching, dan validasi ISBN-13.', defaultAssigneeId: 'user-dev-3', estimateHours: 24 },
@@ -54,7 +54,7 @@ export class CrmDealsView {
         id: 'pos_warung',
         name: 'Sistem POS Warung Makan & Kelontong Nusantara (5 Modul Lengkap)',
         badge: 'Rekomendasi UKM / Warung',
-        icon: '🍲',
+        icon: 'fi-rr-shop',
         summary: 'Kebutuhan lengkap warung makan & sembako: kasir cepat layar sentuh, potong stok resep bahan baku, QRIS dinamis, rekap tutup kasir, dan otorisasi PIN owner.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Kasir Layar Sentuh & Cetak Struk ESC/POS Thermal 58mm', description: 'Input pesanan cepat, hitung kembalian, diskon promo, dan cetak struk thermal 58mm.', defaultAssigneeId: 'user-dev-1', estimateHours: 28 },
@@ -68,7 +68,7 @@ export class CrmDealsView {
         id: 'booking_futsal',
         name: 'Sistem Booking Lapangan Futsal & Kasir Sewa (5 Modul Lengkap)',
         badge: 'Olahraga & Sport Hub',
-        icon: '⚽',
+        icon: 'fi-rr-football',
         summary: 'Sistem sewa lapangan futsal real-time: kalender slot interaktif, DP QRIS dinamis countdown 15 menit, kasir kantin & sewa rompi/bola, WhatsApp ticket QR, dan rekap okupansi.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Manajemen Lapangan, Grid Jadwal Interaktif & Anti Double-Booking', description: 'Kalender visual pemilihan jam per lapangan, lock slot otomatis saat checkout.', defaultAssigneeId: 'user-dev-1', estimateHours: 28 },
@@ -82,7 +82,7 @@ export class CrmDealsView {
         id: 'pos_system',
         name: 'Sistem ERP Klinik Gigi & Medika Prima (3 Modul)',
         badge: 'Kesehatan & Klinik',
-        icon: '🏥',
+        icon: 'fi-rr-hospital',
         summary: 'Pendaftaran pasien, rekam medis odontogram interaktif, kasir farmasi obat, dan integrasi BPJS SatuSehat.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Pendaftaran Pasien & Rekam Medis Odontogram Interaktif', description: 'Rekam medis digital gigi odontogram, riwayat tindakan, dan reservasi dokter.', defaultAssigneeId: 'user-dev-1', estimateHours: 32 },
@@ -94,7 +94,7 @@ export class CrmDealsView {
         id: 'ecommerce_platform',
         name: 'Marketplace B2B Material & Multi-Gudang (3 Modul)',
         badge: 'B2B & Logistik',
-        icon: '🏗️',
+        icon: 'fi-rr-building',
         summary: 'Katalog grosir semen & baja, sistem kredit tenor tempo (TOP 30/60 Hari), dan manajemen multi-gudang distributor.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Katalog Grosir, Booking PO & Negosiasi Harga Volume', description: 'Katalog semen, baja, dan material berat dengan diskon kuantitas.', defaultAssigneeId: 'user-dev-1', estimateHours: 36 },
@@ -301,14 +301,14 @@ export class CrmDealsView {
                   ` : isWon ? `
                     <button class="crm-btn-primary convert-deal-btn" data-deal-id="${deal.id}" style="background-color: #059669 !important;">
                       ${Icons.sparkles('', 14)}
-                      <span>⚡ Eksekusi Deal &amp; Bagi Modul (Epics)</span>
+                      <span><i class="fi fi-rr-bolt"></i> Eksekusi Deal &amp; Bagi Modul (Epics)</span>
                       ${Icons.arrowRight('', 14)}
                     </button>
                   ` : `
                     <div style="display: flex; gap: 6px;">
                       <button class="crm-btn-primary convert-deal-btn" data-deal-id="${deal.id}" style="flex: 1;">
                         ${Icons.sparkles('', 14)}
-                        <span>⚡ Eksekusi &amp; Bagi Modul</span>
+                        <span><i class="fi fi-rr-bolt"></i> Eksekusi &amp; Bagi Modul</span>
                       </button>
                       <button class="crm-btn-secondary mark-deal-won-btn" data-deal-id="${deal.id}" title="Tandai status sebagai Won / Deal">
                         ${Icons.check('', 12)}
@@ -449,7 +449,7 @@ export class CrmDealsView {
           </div>
 
           <div style="padding: 10px 14px; border-radius: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; font-size: 12px; color: #065f46; display: flex; align-items: center; gap: 8px;">
-            <span style="font-weight: bold; font-size: 14px;">✓</span>
+            <i class="fi fi-rr-check" style="font-weight: bold; font-size: 14px; color: #059669;"></i>
             <span>Integrasi GitHub Webhook aktif: Repository private otomatis dibuat dengan proteksi branch staging &amp; main.</span>
           </div>
         </div>
@@ -463,7 +463,7 @@ export class CrmDealsView {
       return `
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <div style="padding: 10px 14px; border-radius: 8px; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px; color: #1e40af; display: flex; align-items: flex-start; gap: 10px;">
-            <span style="font-size: 18px; line-height: 1;">🧩</span>
+            <i class="fi fi-rr-puzzle-piece" style="font-size: 18px; line-height: 1; color: #2563eb;"></i>
             <div>
               <strong>Alur Pembagian Modul Proyek (Epics &amp; Work Packages):</strong>
               <p style="margin: 2px 0 0 0; color: #1e3a8a; line-height: 1.4;">
@@ -477,7 +477,7 @@ export class CrmDealsView {
             <select id="wizardTemplateSelect" class="crm-form-select" style="font-weight: 600;">
               ${Object.values(this.TEMPLATES).map(tmpl => `
                 <option value="${tmpl.id}" ${this.selectedTemplateKey === tmpl.id ? 'selected' : ''}>
-                  ${tmpl.icon} ${tmpl.name}
+                  [${tmpl.badge}] ${tmpl.name}
                 </option>
               `).join('')}
             </select>
@@ -529,7 +529,8 @@ export class CrmDealsView {
                 </div>
 
                 <div style="margin-top: 6px; font-size: 10.5px; color: #059669; display: flex; align-items: center; gap: 6px; background: #f0fdf4; padding: 3px 8px; border-radius: 4px; border: 1px solid #dcfce7;">
-                  <span>✦ Menghasilkan: 1 Task Core/Backend + 1 Task UI/Frontend + Checklist Acceptance Criteria</span>
+                  <i class="fi fi-rr-check" style="font-size: 11px;"></i>
+                  <span>Menghasilkan: 1 Task Core/Backend + 1 Task UI/Frontend + Checklist Acceptance Criteria</span>
                 </div>
               </div>
             `).join('')}
@@ -619,7 +620,7 @@ export class CrmDealsView {
           </div>
 
           <div style="padding: 10px 14px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 12px; color: #475569; display: flex; align-items: center; gap: 8px;">
-            <span style="font-weight: bold; color: #0052cc;">ℹ</span>
+            <i class="fi fi-rr-info" style="font-size: 14px; color: #0052cc;"></i>
             <span>Setelah konfirmasi, sistem akan otomatis berpindah ke tab Kanban Board proyek baru dan modul-modul siap dikerjakan.</span>
           </div>
         </div>
@@ -733,7 +734,7 @@ export class CrmDealsView {
         if (deal) {
           deal.status = 'Deal';
           deal.stage = 'Deal';
-          store.addToast('success', 'Deal Ditandai Won! 🎉', `Status deal "${deal.title}" kini Won/Deal. Siap dibagi modul.`);
+          store.addToast('success', 'Deal Ditandai Won!', `Status deal "${deal.title}" kini Won/Deal. Siap dibagi modul.`);
           this.openConvertModal(deal);
         }
       }
