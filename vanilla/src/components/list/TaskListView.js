@@ -93,6 +93,8 @@ export class TaskListView {
         if (field === 'priority') return task.priority.toLowerCase() === val;
         if (field === 'status') return task.status.toLowerCase().includes(val);
         if (field === 'difficulty') return (task.difficulty || '').toLowerCase() === val;
+        if (field === 'source') return (task.source || '').toLowerCase().includes(val);
+        if (field === 'severity') return (task.severity || '').toLowerCase().includes(val);
       }
 
       return (
@@ -193,6 +195,9 @@ export class TaskListView {
             <button class="jql-preset-btn ${this.jqlQuery === 'type = Bug' ? 'jql-preset-btn--active' : ''}" data-jql="type = Bug">
               type = Bug
             </button>
+            <button class="jql-preset-btn ${this.jqlQuery === 'source = Telegram Bot' ? 'jql-preset-btn--active' : ''}" data-jql="source = Telegram Bot">
+              source = Telegram Bot
+            </button>
             <button class="jql-preset-btn ${this.jqlQuery === 'priority = Hotfix' ? 'jql-preset-btn--active' : ''}" data-jql="priority = Hotfix">
               priority = Hotfix
             </button>
@@ -202,8 +207,8 @@ export class TaskListView {
             <button class="jql-preset-btn ${this.jqlQuery === 'status = QA/Testing' ? 'jql-preset-btn--active' : ''}" data-jql="status = QA/Testing">
               status = QA/Testing
             </button>
-            <button class="jql-preset-btn ${this.jqlQuery === 'difficulty = Hard' ? 'jql-preset-btn--active' : ''}" data-jql="difficulty = Hard">
-              difficulty = Hard
+            <button class="jql-preset-btn ${this.jqlQuery === 'severity = S1' ? 'jql-preset-btn--active' : ''}" data-jql="severity = S1">
+              severity = S1
             </button>
           </div>
         </div>

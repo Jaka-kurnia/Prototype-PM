@@ -243,6 +243,9 @@ class Store {
 
   // --- Task Operations ---
   updateTaskStatus(taskId, targetStatus, reason = '') {
+    const currentTask = this.state.tasks.find((t) => t.id === taskId);
+    const oldStatus = currentTask ? currentTask.status : 'Unknown';
+
     const updatedTasks = this.state.tasks.map((task) => {
       if (task.id === taskId) {
         return {
@@ -259,7 +262,21 @@ class Store {
       selectedTask = { ...selectedTask, status: targetStatus };
     }
 
-    this.setState({ tasks: updatedTasks, selectedTask });
+    // Append-only audit trail event (PRD Section 6.20)
+    const actor = (this.state.teamMembers || []).find(m => m.id === (this.state.role === 'pm' ? 'user-pm' : this.state.role === 'qa' ? 'user-qa' : 'user-dev-1')) || { name: 'Sistem Manjer', role: 'System' };
+    const auditEvent = {
+      id: `ev-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      taskId,
+      actorName: actor.name,
+      actorRole: actor.role,
+      action: `Mengubah status dari "${oldStatus}" ke "${targetStatus}"`,
+      reason: reason || undefined,
+      timestamp: new Date().toISOString()
+    };
+
+    const newEvents = [auditEvent, ...(this.state.events || [])];
+
+    this.setState({ tasks: updatedTasks, selectedTask, events: newEvents });
     this.addToast('success', 'Status Tiket Diperbarui', `Tiket dipindahkan ke: ${targetStatus}`);
   }
 
@@ -313,6 +330,7 @@ class Store {
       severity: taskData.severity || (taskData.type === 'Bug' ? 'S2 - Major' : undefined),
       environment: taskData.environment || (taskData.type === 'Bug' ? 'Production' : undefined),
       warrantyStatus: taskData.warrantyStatus || (taskData.type === 'Bug' ? 'Garansi Proyek (Gratis)' : undefined),
+      slaTargetMinutes: taskData.slaTargetMinutes || (taskData.severity?.startsWith('S1') ? 30 : taskData.severity?.startsWith('S2') ? 120 : undefined),
       reproductionSteps: taskData.reproductionSteps,
       expectedBehavior: taskData.expectedBehavior,
       actualBehavior: taskData.actualBehavior,
@@ -359,7 +377,11 @@ class Store {
       severity: report.severity || 'S2 - Major',
       environment: report.environment || 'Production',
       warrantyStatus: report.warrantyStatus || 'Garansi Proyek (Gratis)',
-      source: report.source || 'WhatsApp',
+      source: report.source || 'Telegram Bot',
+      telegramChatId: report.telegramChatId || 'tg-client-88219',
+      telegramCorrelationId: `tg-corr-${Date.now()}`,
+      slaTargetMinutes: (report.severity || '').startsWith('S1') ? 30 : 120,
+      slaDueAt: new Date(Date.now() + ((report.severity || '').startsWith('S1') ? 30 : 120) * 60000).toISOString(),
       assigneeId: 'user-dev-3',
       reporterId: 'user-pm',
       estimateHours: 12,
@@ -771,8 +793,8 @@ class Store {
     const project = this.state.projects.find((p) => p.id === params.projectId) || this.getActiveProject();
     const currentProgress = this.getProjectProgress(project.id);
 
-    if (currentProgress <= 10) {
-      const errMsg = `Invoice belum dapat diterbitkan karena progres proyek "${project.name}" saat ini baru ${currentProgress}%. Sesuai SOP, progres minimal harus di atas 10%.`;
+    if (currentProgress < 10) {
+      const errMsg = `Invoice belum dapat diterbitkan karena progres proyek "${project.name}" saat ini baru ${currentProgress}%. Sesuai SOP & PRD, progres pengerjaan minimal harus mencapai ≥ 10%.`;
       this.addToast('error', 'Syarat Progres Belum Terpenuhi', errMsg);
       return { success: false, error: errMsg };
     }
@@ -806,7 +828,7 @@ class Store {
       status: 'Terkirim ke Finance',
       percentage: params.percentage,
       projectProgressAtIssue: currentProgress,
-      notes: params.notes || 'Invoice diterbitkan otomatis berdasarkan capaian progres proyek > 10% dan diteruskan ke Finance.',
+      notes: params.notes || 'Invoice diterbitkan otomatis berdasarkan capaian progres proyek ≥ 10% dan diteruskan ke Finance.',
       bankAccount: {
         bankName: 'Bank Central Asia (BCA)',
         accountNumber: '883-091-2391',

@@ -67,11 +67,11 @@ export class FinanceInvoicesView {
             <div>
               <div class="finance-banner-title">
                 <h1>Modul Invoice &amp; Sinkronisasi Finance</h1>
-                <span class="finance-badge-emerald">SOP Progres &gt; 10%</span>
+                <span class="finance-badge-emerald">SOP Progres &ge; 10%</span>
                 <span class="finance-badge-indigo">Notifikasi Terpadu Finance &amp; CRM</span>
               </div>
               <p class="finance-banner-desc">
-                Penerbitan tagihan termin custom persen &amp; nominal dengan syarat capaian progres &gt; 10%. Otomatis mengirim notifikasi ke divisi Finance &amp; CRM pada tiap project yang dikerjakan.
+                Penerbitan tagihan termin custom persen &amp; nominal dengan syarat capaian progres &ge; 10%. Otomatis mengirim notifikasi ke divisi Finance &amp; CRM pada tiap project yang dikerjakan.
               </p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export class FinanceInvoicesView {
           <div class="finance-banner-actions">
             <button id="openMilestoneBtn" class="finance-btn-primary" style="background: #0052cc; color: white;">
               <span style="color: #6ee7b7;">${Icons.percent('', 14)}</span>
-              <span>+ Terbitkan Invoice Termin (Progres &gt; 10%)</span>
+              <span>+ Terbitkan Invoice Termin (Progres &ge; 10%)</span>
             </button>
             <button id="openCreateCompletedTasksBtn" class="finance-btn-secondary">
               ${Icons.plus('', 14)}

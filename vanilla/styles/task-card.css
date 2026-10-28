@@ -156,6 +156,25 @@
   color: #006644;
 }
 
+.task-card__tag--sla {
+  background-color: #ebf5fb;
+  color: #0052cc;
+  border: 1px solid #bce2f7;
+  font-family: var(--font-mono);
+}
+
+.task-card__tag--telegram {
+  background-color: #ebf5fb;
+  color: #24a1de;
+  border: 1px solid #bce2f7;
+}
+
+.task-card__tag--sentry {
+  background-color: #ffebe6;
+  color: #bf2600;
+  border: 1px solid #ffbdad;
+}
+
 /* Footer Row */
 .task-card__footer {
   display: flex;
@@ -198,6 +217,16 @@
 
 .task-card__type-badge--task {
   background-color: #4bade8;
+  color: #ffffff;
+}
+
+.task-card__type-badge--revisi {
+  background-color: #ffab00;
+  color: #172b4d;
+}
+
+.task-card__type-badge--maint {
+  background-color: #00b8d9;
   color: #ffffff;
 }
 

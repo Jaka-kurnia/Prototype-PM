@@ -251,6 +251,47 @@ export class GithubSettingsView {
           </div>
         </div>
 
+        <!-- 6. Konfigurasi Telegram Bot API Resmi (@ProjectManjerBot) - PRD v3.0 -->
+        <div style="background: white; border-radius: 16px; padding: 20px 24px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: #24a1de; color: white; display: flex; align-items: center; justify-content: center;">
+                ${Icons.telegram('', 18)}
+              </div>
+              <div>
+                <h2 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0;">6. Integrasi Telegram Bot API Resmi (@ProjectManjerBot)</h2>
+                <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">Kanal intake utama untuk laporan klien, triage, notifikasi, dan pengecekan tiket (PRD v3.0).</p>
+              </div>
+            </div>
+
+            <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: #ebf5fb; color: #24a1de; border: 1px solid #bce2f7;">
+              <i class="fi fi-rr-check" style="margin-right: 3px;"></i>Webhook Aktif (98ms)
+            </span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Bot Username</label>
+              <input type="text" readonly value="@ProjectManjerBot" style="width: 100%; padding: 8px 12px; font-size: 12px; font-weight: 700; color: #0284c7; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;" />
+            </div>
+
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Telegram Webhook URL</label>
+              <input type="text" readonly value="https://api.projectmanjer.id/api/v1/telegram/webhook" style="width: 100%; padding: 8px 12px; font-size: 12px; font-family: var(--font-mono); color: #334155; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;" />
+            </div>
+          </div>
+
+          <div style="padding: 10px 14px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #166534;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fi fi-rr-shield-check" style="font-weight: bold; color: #166534;"></i>
+              <span>Perintah Terdaftar: <code>/help</code>, <code>/status</code>, <code>/human</code>, <code>/unlink</code> · Auto-Ack SLA: <strong>Aktif</strong></span>
+            </div>
+            <button type="button" onclick="store.openIntakeModal();" class="finance-btn-secondary" style="font-size: 10px; padding: 4px 10px; background: white;">
+              Uji Simulator Telegram
+            </button>
+          </div>
+        </div>
+
       </div>
 
       <!-- Add Collaborator Modal -->

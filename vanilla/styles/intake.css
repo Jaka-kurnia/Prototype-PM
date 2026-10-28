@@ -34,10 +34,10 @@
 }
 
 .intake-chat-container {
-  height: 280px;
+  height: 310px;
   overflow-y: auto;
-  background-color: #efeae2;
-  background-image: radial-gradient(#d1d7db 1px, transparent 1px);
+  background-color: #f4f5f7;
+  background-image: radial-gradient(#dfe1e6 1px, transparent 1px);
   background-size: 16px 16px;
   padding: 16px;
   display: flex;
@@ -45,33 +45,77 @@
   gap: 12px;
 }
 
+.intake-chat-container.telegram-theme {
+  background-color: #0e1621;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
 .intake-chat-msg {
-  max-width: 80%;
+  max-width: 82%;
   padding: 10px 14px;
   border-radius: 12px;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.45;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .intake-chat-msg.bot {
   background: white;
-  color: #111b21;
+  color: #172b4d;
   align-self: flex-start;
   border-top-left-radius: 2px;
+  border: 1px solid #ebecf0;
+}
+
+.intake-chat-container.telegram-theme .intake-chat-msg.bot {
+  background: #182533;
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .intake-chat-msg.user {
-  background: #d9fdd3;
-  color: #111b21;
+  background: #deebff;
+  color: #0747a6;
   align-self: flex-end;
   border-top-right-radius: 2px;
+  border: 1px solid #b3d4ff;
+}
+
+.intake-chat-container.telegram-theme .intake-chat-msg.user {
+  background: #2b5278;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .intake-chat-time {
   font-size: 10px;
-  color: #667781;
+  color: #6b778c;
   text-align: right;
   margin-top: 4px;
+}
+
+.intake-chat-container.telegram-theme .intake-chat-time {
+  color: #708499;
+}
+
+.telegram-command-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  background: #ebf5fb;
+  color: #24a1de;
+  border: 1px solid #bce2f7;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.telegram-command-pill:hover {
+  background: #24a1de;
+  color: white;
 }

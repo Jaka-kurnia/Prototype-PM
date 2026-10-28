@@ -39,13 +39,13 @@ export class CrmDealsView {
         name: 'Sistem Perpustakaan Digital Kampus (Laravel Microservices & React SPA)',
         badge: 'Microservices & Edu Tech',
         icon: 'fi-rr-book-alt',
-        summary: 'Arsitektur microservices: Microservice Katalog Laravel 11, Engine Sirkulasi & Denda Redis Mutex, Portal OPAC React 19, API Gateway Traefik, WhatsApp Reminder, dan Testing QA K6/Playwright.',
+        summary: 'Arsitektur microservices: Microservice Katalog Laravel 11, Engine Sirkulasi & Denda Redis Mutex, Portal OPAC React 19, API Gateway Traefik, Telegram Reminder Bot, dan Testing QA K6/Playwright.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Microservice Katalog Buku, Pengarang & ISBN (Laravel Backend)', description: 'REST API microservice buku dengan Laravel 11, skema PostgreSQL, Redis caching, dan validasi ISBN-13.', defaultAssigneeId: 'user-dev-3', estimateHours: 24 },
           { keySuffix: 'EPIC-2', title: 'Portal Katalog Pencarian OPAC & Detail Buku (React Frontend)', description: 'Antarmuka pencarian cepat full-text judul/penulis, filter multi-kategori buku, dan visualisasi ketersediaan rak.', defaultAssigneeId: 'user-dev-2', estimateHours: 26 },
           { keySuffix: 'EPIC-3', title: 'Microservice Sirkulasi Peminjaman & Perhitungan Denda (Laravel Backend)', description: 'Logika transaksi peminjaman, batas durasi pinjam 7 hari, denda otomatis Rp 2.000/hari, dan atomic lock.', defaultAssigneeId: 'user-dev-3', estimateHours: 28 },
           { keySuffix: 'EPIC-4', title: 'Meja Sirkulasi Petugas & Dashboard Mahasiswa (React Frontend)', description: 'UI kasir peminjaman barcode scanner kartu mahasiswa & buku, riwayat aktif pinjaman, dan slip checkout thermal.', defaultAssigneeId: 'user-dev-2', estimateHours: 22 },
-          { keySuffix: 'EPIC-5', title: 'API Gateway, Docker Containerization & WhatsApp Reminder (Fullstack)', description: 'Reverse proxy Traefik/Nginx, orchestrator Docker Compose, dan bot WhatsApp notifikasi pengembalian H-1.', defaultAssigneeId: 'user-dev-1', estimateHours: 28 },
+          { keySuffix: 'EPIC-5', title: 'API Gateway, Docker Containerization & Telegram Reminder Bot (Fullstack)', description: 'Reverse proxy Traefik/Nginx, orchestrator Docker Compose, dan bot Telegram notifikasi pengembalian H-1.', defaultAssigneeId: 'user-dev-1', estimateHours: 28 },
           { keySuffix: 'EPIC-6', title: 'Matrix Test Case Sirkulasi, K6 Load Test & Staging QA Sign-Off (QA)', description: 'Rangkaian pengujian integrasi sirkulasi buku, stress test 2.000 concurrent RPS via K6, dan sign-off UAT.', defaultAssigneeId: 'user-qa', estimateHours: 20 },
           { keySuffix: 'EPIC-7', title: 'Sprint Backlog, UAT Stakeholder & Tata Kelola Proyek (PM)', description: 'Dokumentasi user story, koordinasi kickoff meeting kepala perpustakaan, dan verifikasi termin tagihan.', defaultAssigneeId: 'user-pm', estimateHours: 14 }
         ]
@@ -69,12 +69,12 @@ export class CrmDealsView {
         name: 'Sistem Booking Lapangan Futsal & Kasir Sewa (5 Modul Lengkap)',
         badge: 'Olahraga & Sport Hub',
         icon: 'fi-rr-football',
-        summary: 'Sistem sewa lapangan futsal real-time: kalender slot interaktif, DP QRIS dinamis countdown 15 menit, kasir kantin & sewa rompi/bola, WhatsApp ticket QR, dan rekap okupansi.',
+        summary: 'Sistem sewa lapangan futsal real-time: kalender slot interaktif, DP QRIS dinamis countdown 15 menit, kasir kantin & sewa rompi/bola, Telegram ticket QR bot, dan rekap okupansi.',
         modules: [
           { keySuffix: 'EPIC-1', title: 'Manajemen Lapangan, Grid Jadwal Interaktif & Anti Double-Booking', description: 'Kalender visual pemilihan jam per lapangan, lock slot otomatis saat checkout.', defaultAssigneeId: 'user-dev-1', estimateHours: 28 },
           { keySuffix: 'EPIC-2', title: 'Pembayaran Down Payment (DP), QRIS Dinamis & Timer 15 Menit', description: 'Generate kode bayar QRIS dinamis untuk DP, webhook verifikasi otomatis, dan countdown.', defaultAssigneeId: 'user-dev-2', estimateHours: 24 },
           { keySuffix: 'EPIC-3', title: 'Rental Perlengkapan (Rompi/Sepatu/Bola) & POS Kasir Kantin', description: 'Add-on sewa perlengkapan pertandingan dan kasir POS minuman di venue.', defaultAssigneeId: 'user-dev-3', estimateHours: 20 },
-          { keySuffix: 'EPIC-4', title: 'WhatsApp Gateway Tiket QR Code & Broadcast Reminder H-2 Jam', description: 'Pengiriman otomatis bukti booking digital berisi QR Code check-in via WhatsApp resmi.', defaultAssigneeId: 'user-dev-1', estimateHours: 22 },
+          { keySuffix: 'EPIC-4', title: 'Telegram Gateway Tiket QR Code & Broadcast Reminder H-2 Jam', description: 'Pengiriman otomatis bukti booking digital berisi QR Code check-in via Telegram Bot resmi.', defaultAssigneeId: 'user-dev-1', estimateHours: 22 },
           { keySuffix: 'EPIC-5', title: 'Pelunasan di Lokasi, Rekap Kasir Shift & Laporan Okupansi', description: 'Scan QR tiket kasir resepsionis, pelunasan sisa bayar, dan analitik okupansi.', defaultAssigneeId: 'user-qa', estimateHours: 18 }
         ]
       },

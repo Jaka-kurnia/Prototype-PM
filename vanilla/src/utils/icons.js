@@ -91,7 +91,8 @@ const rawIcons = {
   grid: (cls = '', sz = 16) => createSvg('<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>', cls, sz),
   wrench: (cls = '', sz = 16) => createSvg('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>', cls, sz),
   filter: (cls = '', sz = 16) => createSvg('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>', cls, sz),
-  folder: (cls = '', sz = 16) => createSvg('<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>', cls, sz)
+  folder: (cls = '', sz = 16) => createSvg('<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>', cls, sz),
+  telegram: (cls = '', sz = 16) => createSvg('<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>', cls, sz)
 };
 
 // Safe Proxy Export: Never crashes even if an icon is unknown

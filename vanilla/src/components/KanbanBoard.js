@@ -216,13 +216,13 @@ export class KanbanBoard {
             </button>
 
             <!-- Simulator Button -->
-            <button id="kanbanSimulasiBtn" class="jira-btn jira-btn--default" title="Simulasi Laporan Klien Masuk (WhatsApp / Sentry)">
+            <button id="kanbanSimulasiBtn" class="jira-btn jira-btn--default" title="Simulasi Multi-Channel Intake (Telegram Bot / Sentry / Web Portal)">
               <i class="fi fi-rr-bolt" style="color: #f59e0b;"></i>
               <span>Simulasi Tiket</span>
             </button>
 
             <!-- Invoice Milestone Button -->
-            <button id="kanbanInvoiceBtn" class="jira-btn ${progress > 10 ? 'jira-btn--primary' : 'jira-btn--default'}" title="Penerbitan Invoice Termin Proyek">
+            <button id="kanbanInvoiceBtn" class="jira-btn ${progress >= 10 ? 'jira-btn--primary' : 'jira-btn--default'}" title="${progress >= 10 ? 'Terbitkan Invoice Termin (Syarat Progres ≥ 10% Terpenuhi)' : 'Invoice Termin Belum Dapat Diterbitkan (Syarat Progres Minimal ≥ 10%)'}">
               <i class="fi fi-rr-dollar"></i>
               <span>Invoice Termin (${progress}%)</span>
             </button>

@@ -75,7 +75,7 @@ export function createTaskCard(task, members, epics, onClick) {
     `;
   }
 
-  // Type icon renderer (Jira Standard Squares)
+  // Type icon renderer (Jira Standard Squares & PRD 6.4 Issue Types)
   let typeIconHtml = '';
   if (task.type === 'Bug') {
     typeIconHtml = `
@@ -87,6 +87,18 @@ export function createTaskCard(task, members, epics, onClick) {
     typeIconHtml = `
       <span class="task-card__type-badge task-card__type-badge--feature" title="Tipe: Feature (Story)">
         ${Icons.sparkles('w-2.5 h-2.5', 11)}
+      </span>
+    `;
+  } else if (task.type === 'Revisi' || task.type === 'Change Request') {
+    typeIconHtml = `
+      <span class="task-card__type-badge task-card__type-badge--revisi" title="Tipe: Change Request / Revisi">
+        ${Icons.refresh('w-2.5 h-2.5', 11)}
+      </span>
+    `;
+  } else if (task.type === 'Maintenance') {
+    typeIconHtml = `
+      <span class="task-card__type-badge task-card__type-badge--maint" title="Tipe: Maintenance">
+        ${Icons.wrench('w-2.5 h-2.5', 11)}
       </span>
     `;
   } else {
@@ -113,8 +125,21 @@ export function createTaskCard(task, members, epics, onClick) {
 
   // Tags HTML
   let tagsHtml = '';
-  const hasTags = task.severity || task.environment || task.qaSignOff || task.prNumber || task.warrantyStatus;
+  const hasTags = task.severity || task.environment || task.qaSignOff || task.prNumber || task.warrantyStatus || task.source === 'Telegram Bot' || task.source === 'Sentry' || task.slaTargetMinutes;
   if (hasTags) {
+    let sourceHtml = '';
+    if (task.source === 'Telegram Bot') {
+      sourceHtml = `<span class="task-card__tag task-card__tag--telegram" title="Laporan masuk via @ProjectManjerBot">${Icons.telegram('w-2.5 h-2.5', 10)} <span>Telegram</span></span>`;
+    } else if (task.source === 'Sentry') {
+      sourceHtml = `<span class="task-card__tag task-card__tag--sentry" title="Laporan exception Sentry">${Icons.terminal('w-2.5 h-2.5', 10)} <span>Sentry</span></span>`;
+    }
+
+    let slaHtml = '';
+    if (task.slaTargetMinutes || (task.severity && task.severity.startsWith('S1'))) {
+      const mins = task.slaTargetMinutes || (task.severity?.startsWith('S1') ? 30 : 120);
+      slaHtml = `<span class="task-card__tag task-card__tag--sla" title="SLA Tanggap Target: ${mins} menit"><i class="fi fi-rr-clock" style="font-size: 9px;"></i> SLA ${mins}m</span>`;
+    }
+
     let sevHtml = '';
     if (task.severity) {
       const isS1 = task.severity.startsWith('S1');
@@ -147,6 +172,8 @@ export function createTaskCard(task, members, epics, onClick) {
 
     tagsHtml = `
       <div class="task-card__tags">
+        ${sourceHtml}
+        ${slaHtml}
         ${sevHtml}
         ${envHtml}
         ${qaHtml}

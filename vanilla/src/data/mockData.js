@@ -1047,7 +1047,7 @@ const INITIAL_TASKS = [
     environment: "Production",
     warrantyStatus: "Garansi Proyek (Gratis)",
     slaDeadline: "2026-10-21T18:00:00Z",
-    source: "WhatsApp",
+    source: "Telegram Bot",
     assigneeId: "user-dev-3",
     reporterId: "user-pm",
     estimateHours: 3,
@@ -1668,7 +1668,7 @@ const INITIAL_TASKS = [
     status: "Selesai",
     priority: "Rendah",
     difficulty: "Low",
-    source: "WhatsApp",
+    source: "Telegram Bot",
     assigneeId: "user-dev-2",
     reporterId: "user-pm",
     estimateHours: 3,
@@ -1798,7 +1798,7 @@ const INITIAL_TASKS = [
     environment: "Production",
     warrantyStatus: "Garansi Proyek (Gratis)",
     slaDeadline: "2026-10-21T16:00:00Z",
-    source: "WhatsApp",
+    source: "Telegram Bot",
     assigneeId: "user-dev-1",
     reporterId: "user-pm",
     estimateHours: 3,
@@ -2599,10 +2599,10 @@ const INITIAL_COMMENTS = [
 const INITIAL_RULES = [
   {
     id: "rule-1",
-    name: "Notifikasi Cepat WhatsApp untuk Bug Hotfix",
+    name: "Notifikasi Cepat Telegram Bot untuk Bug Hotfix",
     trigger: "Ketika task baru dibuat dengan priority = Hotfix",
-    condition: "Tipe = Bug dan Source = Sentry / Web / WA",
-    action: "Kirim alert ringkas ke grup WhatsApp Developer On-Call & tandai di Dashboard",
+    condition: "Tipe = Bug dan Source = Sentry / Web / Telegram Bot",
+    action: "Kirim alert ringkas ke grup Telegram Developer On-Call (@ProjectManjerBot) & tandai di Dashboard",
     isActive: true
   },
   {

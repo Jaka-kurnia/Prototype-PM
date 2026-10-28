@@ -55,7 +55,7 @@ export class CreateMilestoneInvoiceModal {
     const state = store.getState();
     const proj = state.projects.find(p => p.id === this.targetProjectId) || state.projects[0];
     const currentProgress = store.getProjectProgress(proj ? proj.id : '');
-    const isProgressEligible = currentProgress > 10;
+    const isProgressEligible = currentProgress >= 10;
 
     const subtotal = this.customNominal;
     const taxPpn = Math.round(subtotal * 0.11);
@@ -74,7 +74,7 @@ export class CreateMilestoneInvoiceModal {
                 <h2 style="font-size: 15px; font-weight: 700; color: var(--color-zinc-900); margin: 0;">
                   Terbitkan Invoice Termin & Kirim ke Finance
                 </h2>
-                <span class="finance-badge-emerald">SOP Progres &gt; 10%</span>
+                <span class="finance-badge-emerald">SOP Progres &ge; 10%</span>
               </div>
               <p style="font-size: 12px; color: var(--color-zinc-500); margin: 2px 0 0 0;">
                 Penerbitan tagihan termin custom persen & nominal dengan notifikasi terpadu ke Finance dan CRM.
@@ -107,13 +107,13 @@ export class CreateMilestoneInvoiceModal {
                   <div style="font-size: 11px; color: var(--color-zinc-500); font-family: var(--font-mono);">Nilai Kontrak: <strong>${this.formatIDR(proj ? proj.contractValue : 0)}</strong></div>
                 </div>
                 <div class="finance-status-pill ${isProgressEligible ? 'pass' : 'fail'}">
-                  ${isProgressEligible ? `${Icons.checkCircle('', 12)} Lolos Syarat (&gt; 10%)` : `${Icons.alertTriangle('', 12)} Belum Lolos (&le; 10%)`}
+                  ${isProgressEligible ? `${Icons.checkCircle('', 12)} Lolos Syarat (&ge; 10%)` : `${Icons.alertTriangle('', 12)} Belum Lolos (&lt; 10%)`}
                 </div>
               </div>
 
               <div style="padding-top: 12px; display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--color-zinc-600);">
-                  <span>Ambang Batas Syarat Terbit Invoice: &gt; 10%</span>
+                  <span>Ambang Batas Syarat Terbit Invoice: &ge; 10%</span>
                   <span style="font-family: var(--font-mono); font-weight: 700;">${currentProgress}% Tercapai</span>
                 </div>
                 <div class="finance-progress-bar-bg">

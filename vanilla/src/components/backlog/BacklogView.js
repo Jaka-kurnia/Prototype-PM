@@ -434,7 +434,7 @@ export class BacklogView {
           <span class="jira-issue-handle" title="Drag to reorder">${Icons.gripVertical('', 14)}</span>
 
           <span class="jira-issue-type-icon" title="Tipe: ${task.type}">
-            ${task.type === 'Bug' ? Icons.bug('text-rose-600', 14) : task.type === 'Feature' ? Icons.sparkles('text-indigo-600', 14) : Icons.checkSquare('text-slate-400', 14)}
+            ${task.type === 'Bug' ? Icons.bug('text-rose-600', 14) : task.type === 'Feature' ? Icons.sparkles('text-indigo-600', 14) : (task.type === 'Revisi' || task.type === 'Change Request') ? Icons.refresh('text-amber-600', 14) : task.type === 'Maintenance' ? Icons.wrench('text-teal-600', 14) : Icons.checkSquare('text-slate-400', 14)}
           </span>
 
           <a href="javascript:void(0)" class="jira-issue-key open-task-detail-link" data-task-id="${task.id}" title="Klik untuk membuka detail">

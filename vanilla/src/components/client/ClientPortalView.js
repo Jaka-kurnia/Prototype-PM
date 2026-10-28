@@ -1,6 +1,7 @@
 /**
  * ClientPortalView.js
  * Client Transparency Portal in 100% Native Vanilla JS.
+ * Dilengkapi integrasi Telegram Bot API Resmi (@ProjectManjerBot) sesuai PRD v3.0.
  */
 
 import { store } from '../../state/store.js';
@@ -67,10 +68,40 @@ export class ClientPortalView {
             </div>
           </div>
 
-          <button id="clientReportBugBtn" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 12px; font-weight: 600; border-radius: 8px; border: none; background: #4f46e5; color: white; cursor: pointer;">
-            ${Icons.plus('', 14)}
-            <span>Lapor Masalah / Bug Baru</span>
-          </button>
+          <div style="display: flex; gap: 8px;">
+            <button id="clientOpenTelegramBtn" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1px solid #bce2f7; background: #ebf5fb; color: #0077b6; cursor: pointer;">
+              ${Icons.telegram('', 14)}
+              <span>Buka @ProjectManjerBot</span>
+            </button>
+            <button id="clientReportBugBtn" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 12px; font-weight: 600; border-radius: 8px; border: none; background: #4f46e5; color: white; cursor: pointer;">
+              ${Icons.plus('', 14)}
+              <span>Lapor Masalah / Bug Baru</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Telegram Bot Official Integration Card (PRD v3.0) -->
+        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 38px; height: 38px; border-radius: 8px; background: #24a1de; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              ${Icons.telegram('', 20)}
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: #0369a1;">Kanal Telegram Bot Resmi Terhubung (@ProjectManjerBot)</span>
+                <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #dcfce7; color: #15803d; border: 1px solid #86efac;">
+                  <i class="fi fi-rr-check" style="font-size: 9px; margin-right: 2px;"></i>Chat Terverifikasi
+                </span>
+              </div>
+              <p style="font-size: 12px; color: #475569; margin: 2px 0 0 0;">
+                Gunakan perintah <code>/status [TIKET]</code> untuk lacak progres, <code>/help</code> untuk panduan, atau kirim kendala langsung via Telegram untuk auto-triage AI.
+              </p>
+            </div>
+          </div>
+          <div style="text-align: right; flex-shrink: 0;">
+            <div style="font-size: 11px; color: #64748b;">Kode Tautan Akun:</div>
+            <code style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #0284c7; background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">LNK-${activeProject?.code || 'POS'}-88219</code>
+          </div>
         </div>
 
         <!-- 2. Quota & SLA Grid -->
@@ -97,12 +128,12 @@ export class ClientPortalView {
           </div>
 
           <div class="client-stat-card">
-            <span style="font-size: 12px; font-weight: 500; color: #64748b;">SLA Tanggap Cepat</span>
+            <span style="font-size: 12px; font-weight: 500; color: #64748b;">SLA Tanggap Cepat (PRD v3.0)</span>
             <div style="font-size: 20px; font-weight: 700; font-family: var(--font-mono); color: #047857; padding-top: 4px;">
-              &lt; 1 Jam Respons
+              &lt; 30 Menit (S1) / &lt; 2 Jam (S2)
             </div>
             <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0;">
-              Laporan via WhatsApp &amp; Web terhubung otomatis ke on-call developer.
+              Laporan via Telegram Bot &amp; Web terhubung otomatis ke on-call developer.
             </p>
           </div>
         </div>
@@ -204,7 +235,7 @@ export class ClientPortalView {
 
   bindEvents() {
     this.element.addEventListener('click', (e) => {
-      if (e.target.closest('#clientReportBugBtn')) {
+      if (e.target.closest('#clientReportBugBtn') || e.target.closest('#clientOpenTelegramBtn')) {
         this.onOpenIntakeModal();
       }
 

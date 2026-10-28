@@ -155,6 +155,29 @@ export class AiAutomationHub {
           </div>
         </div>
 
+        <!-- PRD v3.0 Safety Guardrails & Human-in-the-Loop Principle Banner -->
+        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; font-size: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="color: #b45309; display: flex; flex-shrink: 0;">
+              ${Icons.shieldCheck('', 20)}
+            </div>
+            <div>
+              <span style="font-weight: 700; color: #92400e;">Prinsip Keselamatan PRD v3.0 (Human-in-the-Loop):</span>
+              <span style="color: #78350f; margin-left: 4px;">
+                AI bertindak sebagai asisten diagnostik, bukan pemegang keputusan akhir. AI DILARANG melakukan auto-merge ke branch utama atau auto-deploy ke Production tanpa verifikasi manusia.
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px; flex-shrink: 0;">
+            <span style="background: white; border: 1px solid #fcd34d; color: #92400e; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
+              No Auto-Merge
+            </span>
+            <span style="background: white; border: 1px solid #fcd34d; color: #92400e; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
+              30m Telemetry Gate
+            </span>
+          </div>
+        </div>
+
         <!-- 2. Intelligent Orchestrator AST Simulator Console -->
         <div style="background: white; border-radius: 16px; padding: 20px 24px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -554,9 +577,10 @@ export class AiAutomationHub {
               <div>
                 <label style="font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Sumber</label>
                 <select id="bugSourceSelect" style="width: 100%; padding: 8px 10px; font-size: 12px; border-radius: 8px; border: 1px solid #cbd5e1; background: white;">
-                  <option value="Sentry">Sentry Alert</option>
-                  <option value="WhatsApp">WhatsApp Client</option>
-                  <option value="Web Form">Manual Input</option>
+                  <option value="Telegram Bot">Telegram Bot API (@ProjectManjerBot)</option>
+                  <option value="Sentry">Sentry Alert Exception</option>
+                  <option value="Web Portal">Portal Web Klien</option>
+                  <option value="Manual">Manual / Internal</option>
                 </select>
               </div>
             </div>
