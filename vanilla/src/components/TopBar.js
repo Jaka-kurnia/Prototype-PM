@@ -1,7 +1,7 @@
 /**
  * TopBar Component (100% Native Vanilla JS ES Module)
  * Modeled after Atlassian Jira Software Cloud Global Navigation:
- * - Left: 9-dots App Switcher, PM Jira Logo, Brand title, Breadcrumb & Project Dropdown
+ * - Left: 9-dots App Switcher / Mobile Menu Toggle, PM Jira Logo, Brand title, Breadcrumb & Project Dropdown
  * - Center: Responsive Centered Global Search Bar with '/' keyboard shortcut
  * - Right: Jira Iconic "+ Buat" Action Button ('c' key), Role Switcher (RBAC),
  *          Notification Center with Real-time Count, Reset Demo, and User Profile
@@ -21,6 +21,20 @@ const ROLES = [
   { id: 'client', label: 'Klien (Portal)' }
 ];
 
+const TAB_LABELS = {
+  project: 'Modul Proyek',
+  timeline: 'Timeline / Roadmap',
+  backlog: 'Backlog & Sprints',
+  kanban: 'Papan Kanban',
+  ai_hub: 'Otomasi Fix Bug AI',
+  github: 'GitHub & Cabang',
+  list: 'Daftar Pekerjaan (JQL)',
+  team: 'Tim HR & Workload',
+  crm: 'CRM Deals Won',
+  finance: 'Finance & Invoices',
+  client: 'Service Desk / Klien'
+};
+
 export class TopBar {
   constructor() {
     this.container = document.createElement('header');
@@ -35,55 +49,37 @@ export class TopBar {
     this.unsubscribe = store.subscribe(() => {
       this.render();
     });
-
-    // Global keyboard shortcuts: 'c' to create task, '/' to focus search
-    window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
-        return;
-      }
-      if (e.key === 'c' || e.key === 'C') {
-        e.preventDefault();
-        store.openCreateTaskModal();
-      } else if (e.key === '/') {
-        e.preventDefault();
-        const searchInput = this.container.querySelector('#topbarSearchInput');
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.select();
-        }
-      }
-    });
   }
 
   render() {
     const state = store.getState();
-    const activeProject = store.getActiveProject();
     const unreadNotifs = state.notifications ? state.notifications.filter((n) => !n.isRead).length : 0;
+    const activeTabLabel = TAB_LABELS[state.activeTab] || 'Papan Kanban';
 
     this.container.innerHTML = `
       <!-- Left: App Switcher, Logo & Project Breadcrumb -->
       <div class="topbar__left">
-        <!-- 9-Dots App Switcher -->
-        <button id="topbarAppSwitcher" class="topbar__app-switcher" title="Buka App Switcher">
+        <!-- 9-Dots App Switcher & Mobile Sidebar Trigger -->
+        <button id="topbarAppSwitcher" class="topbar__app-switcher" title="Buka Navigasi / Menu Aplikasi">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="5" cy="5" r="2.5"></circle>
-            <circle cx="12" cy="5" r="2.5"></circle>
-            <circle cx="19" cy="5" r="2.5"></circle>
-            <circle cx="5" cy="12" r="2.5"></circle>
-            <circle cx="12" cy="12" r="2.5"></circle>
-            <circle cx="19" cy="12" r="2.5"></circle>
-            <circle cx="5" cy="19" r="2.5"></circle>
-            <circle cx="12" cy="19" r="2.5"></circle>
-            <circle cx="19" cy="19" r="2.5"></circle>
+            <circle cx="5" cy="5" r="2.2"></circle>
+            <circle cx="12" cy="5" r="2.2"></circle>
+            <circle cx="19" cy="5" r="2.2"></circle>
+            <circle cx="5" cy="12" r="2.2"></circle>
+            <circle cx="12" cy="12" r="2.2"></circle>
+            <circle cx="19" cy="12" r="2.2"></circle>
+            <circle cx="5" cy="19" r="2.2"></circle>
+            <circle cx="12" cy="19" r="2.2"></circle>
+            <circle cx="19" cy="19" r="2.2"></circle>
           </svg>
         </button>
 
         <!-- Brand Group -->
-        <div class="topbar__brand-group">
-          <div class="topbar__jira-logo" title="Project Manjer Suite">PM</div>
+        <div class="topbar__brand-group" id="topbarBrandHome" style="cursor: pointer;" title="Ke Beranda Papan Kanban">
+          <div class="topbar__jira-logo">PM</div>
           <span class="topbar__brand-title">
             Project Manjer
-            <span class="topbar__brand-badge">Jira Suite</span>
+            <span class="topbar__brand-badge">Enterprise</span>
           </span>
         </div>
 
@@ -101,6 +97,10 @@ export class TopBar {
           </select>
           <span class="topbar__project-chevron">${Icons.chevronDown('', 12)}</span>
         </div>
+
+        <!-- Active Page Context Breadcrumb -->
+        <span class="topbar__divider topbar__context-sep">/</span>
+        <span class="topbar__context-page" title="Halaman Aktif: ${activeTabLabel}">${activeTabLabel}</span>
       </div>
 
       <!-- Center: Responsive Global Quick Search Bar -->
@@ -154,10 +154,11 @@ export class TopBar {
 
         <!-- User Profile Avatar -->
         <img
+          id="topbarAvatarBtn"
           src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
           alt="Avatar"
           class="topbar__avatar"
-          title="Login sebagai: ${state.role.toUpperCase()}"
+          title="Login sebagai: ${state.role.toUpperCase()} — Klik untuk profil &amp; kapasitas tim"
         />
       </div>
     `;
@@ -172,6 +173,27 @@ export class TopBar {
   }
 
   attachEvents() {
+    // App switcher / mobile menu toggle
+    const appSwitcher = this.container.querySelector('#topbarAppSwitcher');
+    if (appSwitcher) {
+      appSwitcher.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          store.toggleMobileSidebar();
+        } else {
+          const collapseBtn = document.getElementById('sidebarCollapseBtn');
+          if (collapseBtn) collapseBtn.click();
+        }
+      });
+    }
+
+    // Brand click -> go to Kanban
+    const brandHome = this.container.querySelector('#topbarBrandHome');
+    if (brandHome) {
+      brandHome.addEventListener('click', () => {
+        store.setActiveTab('kanban');
+      });
+    }
+
     // Project switcher
     const projectSelect = this.container.querySelector('#topbarProjectSelect');
     if (projectSelect) {
@@ -220,6 +242,14 @@ export class TopBar {
         if (confirm('Kembalikan data proyek ke default awal?')) {
           store.resetDataToDefault();
         }
+      });
+    }
+
+    // Avatar click -> navigate to HR Team view
+    const avatarBtn = this.container.querySelector('#topbarAvatarBtn');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', () => {
+        store.setActiveTab('team');
       });
     }
   }

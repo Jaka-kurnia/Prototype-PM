@@ -149,7 +149,6 @@ class App {
 
     // 9. Jira Global Keyboard Shortcuts ('c' for create, '/' for quick search)
     window.addEventListener('keydown', (e) => {
-      // Ignore if user is currently typing in an input, textarea, or contentEditable element
       const targetTag = (e.target.tagName || '').toLowerCase();
       if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || e.target.isContentEditable) {
         return;
@@ -163,6 +162,7 @@ class App {
         const searchInput = document.querySelector('.topbar__search-input');
         if (searchInput) {
           searchInput.focus();
+          searchInput.select();
         }
       }
     });
@@ -221,6 +221,9 @@ class App {
       case 'github':
         this.viewportContent.appendChild(this.components.githubSettingsView.getElement());
         break;
+      case 'client':
+        this.viewportContent.appendChild(this.components.clientPortalView.getElement());
+        break;
       default:
         this.viewportContent.appendChild(this.components.kanbanBoard.getElement());
         break;
@@ -233,4 +236,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new App();
   app.bootstrap();
 });
-

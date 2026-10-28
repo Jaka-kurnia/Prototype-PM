@@ -2,11 +2,11 @@
  * Sidebar Component (100% Native Vanilla JS ES Module)
  * Modeled after Atlassian Jira Software Cloud Project Navigation Sidebar:
  * - Project Header with Avatar, Project Code/Name & "Software project" Category
- * - Collapsible / Expandable Button (< / >)
- * - Grouped Navigation Categories:
- *   1. PERENCANAAN (PLANNING): Timeline / Roadmap, Backlog & Sprints, Papan Kanban
+ * - Collapsible / Expandable Button (< / >) & Mobile Drawer Support
+ * - Grouped Navigation Categories with Uniform 16px Vector Icons:
+ *   1. PERENCANAAN (PLANNING): Modul Proyek, Timeline / Roadmap, Backlog & Sprints, Papan Kanban
  *   2. PENGEMBANGAN & AI: Otomasi Fix Bug (AI Hub), GitHub & Cabang Modul
- *   3. OPERASIONAL & BISNIS: Daftar Pekerjaan (JQL Grid), Tim HR & Workload, CRM Deals Won, Finance & Invoices, Portal Klien
+ *   3. OPERASIONAL & BISNIS: Daftar Pekerjaan (JQL Grid), Tim HR & Workload, CRM Deals Won, Finance & Invoices, Portal Klien (Service Desk)
  * - Project Settings Footer
  */
 
@@ -52,6 +52,15 @@ export class Sidebar {
     const crmWonCount = (state.crmDeals || []).filter((d) => d.status === 'Closing/Won').length;
     const unbilledCount = projectTasks.filter((t) => t.status === 'Selesai' && !t.billedInvoiceId).length;
 
+    // Sync mobile drawer state
+    if (state.isMobileSidebarOpen) {
+      this.container.classList.add('sidebar--mobile-open');
+      this.backdrop.classList.add('sidebar-backdrop--visible');
+    } else {
+      this.container.classList.remove('sidebar--mobile-open');
+      this.backdrop.classList.remove('sidebar-backdrop--visible');
+    }
+
     const projCode = activeProject ? activeProject.code : 'PROJ';
     const projName = activeProject ? activeProject.name : 'Proyek Software House';
 
@@ -80,19 +89,19 @@ export class Sidebar {
 
           <button class="sidebar__nav-item ${state.activeTab === 'project' ? 'sidebar__nav-item--active' : ''}" data-tab="project" title="Modul Proyek (Overview, Tasks Kanban, Activity &amp; Tim)">
             <div class="sidebar__nav-item-left">
-              <span class="sidebar__nav-item-icon"><i class="fi fi-rr-apps" style="font-size: 14px; display: inline-flex;"></i></span>
+              <span class="sidebar__nav-item-icon">${Icons.grid('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Modul Proyek</span>
             </div>
           </button>
           
-          <button class="sidebar__nav-item ${state.activeTab === 'timeline' ? 'sidebar__nav-item--active' : ''}" data-tab="timeline" title="Timeline & Roadmap">
+          <button class="sidebar__nav-item ${state.activeTab === 'timeline' ? 'sidebar__nav-item--active' : ''}" data-tab="timeline" title="Timeline &amp; Roadmap">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.calendar('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Timeline / Roadmap</span>
             </div>
           </button>
 
-          <button class="sidebar__nav-item ${state.activeTab === 'backlog' ? 'sidebar__nav-item--active' : ''}" data-tab="backlog" title="Backlog & Sprint Planning">
+          <button class="sidebar__nav-item ${state.activeTab === 'backlog' ? 'sidebar__nav-item--active' : ''}" data-tab="backlog" title="Backlog &amp; Sprint Planning">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.layers('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Backlog &amp; Sprints</span>
@@ -119,7 +128,7 @@ export class Sidebar {
             </div>
           </button>
 
-          <button class="sidebar__nav-item ${state.activeTab === 'github' ? 'sidebar__nav-item--active' : ''}" data-tab="github" title="Integrasi GitHub & Cabang Modul">
+          <button class="sidebar__nav-item ${state.activeTab === 'github' ? 'sidebar__nav-item--active' : ''}" data-tab="github" title="Integrasi GitHub &amp; Cabang Modul">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.gitBranch('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">GitHub &amp; Cabang</span>
@@ -131,14 +140,14 @@ export class Sidebar {
         <div class="sidebar__nav-section">
           <div class="sidebar__section-title">Operasional &amp; Bisnis</div>
 
-          <button class="sidebar__nav-item ${state.activeTab === 'list' ? 'sidebar__nav-item--active' : ''}" data-tab="list" title="Daftar Pekerjaan & JQL">
+          <button class="sidebar__nav-item ${state.activeTab === 'list' ? 'sidebar__nav-item--active' : ''}" data-tab="list" title="Daftar Pekerjaan &amp; JQL">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.listTodo('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Daftar Pekerjaan (JQL)</span>
             </div>
           </button>
 
-          <button class="sidebar__nav-item ${state.activeTab === 'team' ? 'sidebar__nav-item--active' : ''}" data-tab="team" title="Beban Kerja & Kapasitas Tim HR">
+          <button class="sidebar__nav-item ${state.activeTab === 'team' ? 'sidebar__nav-item--active' : ''}" data-tab="team" title="Beban Kerja &amp; Kapasitas Tim HR">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.users('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Tim HR &amp; Workload</span>
@@ -153,19 +162,26 @@ export class Sidebar {
             ${crmWonCount > 0 ? `<span class="sidebar__badge" style="background-color: #e3fcef; color: #006644;">${crmWonCount}</span>` : ''}
           </button>
 
-          <button class="sidebar__nav-item ${state.activeTab === 'finance' ? 'sidebar__nav-item--active' : ''}" data-tab="finance" title="Modul Finance & Invoices">
+          <button class="sidebar__nav-item ${state.activeTab === 'finance' ? 'sidebar__nav-item--active' : ''}" data-tab="finance" title="Modul Finance &amp; Invoices">
             <div class="sidebar__nav-item-left">
               <span class="sidebar__nav-item-icon">${Icons.dollarSign('w-4 h-4', 16)}</span>
               <span class="sidebar__nav-item-label">Finance &amp; Invoices</span>
             </div>
             ${unbilledCount > 0 ? `<span class="sidebar__badge" style="background-color: #fff0b3; color: #172b4d;">${unbilledCount}</span>` : ''}
           </button>
+
+          <button class="sidebar__nav-item ${state.activeTab === 'client' ? 'sidebar__nav-item--active' : ''}" data-tab="client" title="Service Desk &amp; Portal Klien">
+            <div class="sidebar__nav-item-left">
+              <span class="sidebar__nav-item-icon">${Icons.shieldCheck('w-4 h-4', 16)}</span>
+              <span class="sidebar__nav-item-label">Service Desk / Klien</span>
+            </div>
+          </button>
         </div>
       </div>
 
       <!-- Project Settings Footer -->
       <div class="sidebar__footer">
-        <button id="sidebarSettingsBtn" class="sidebar__settings-btn" title="Pengaturan Proyek">
+        <button id="sidebarSettingsBtn" class="sidebar__settings-btn" title="Pengaturan Proyek &amp; GitHub">
           ${Icons.settings('w-4 h-4', 16)}
           <span>Pengaturan Proyek</span>
         </button>

@@ -1,27 +1,32 @@
-/* HR & Team Workload View Styles */
+/* ==========================================================================
+   HR & PEOPLE RESOURCE MANAGEMENT VIEW STYLING
+   Atlassian Jira People & Workload Equivalent
+   ========================================================================== */
+
 .hr-view {
   flex: 1;
   overflow-y: auto;
-  background-color: var(--color-zinc-50);
-  padding: 24px;
-  font-family: inherit;
-  color: var(--color-zinc-900);
+  background-color: var(--color-page-bg, #f4f5f7);
+  padding: 24px 32px;
+  color: var(--color-text-body, #172b4d);
 }
 
 .hr-container {
-  max-width: 1152px;
+  max-width: 1360px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
+  width: 100%;
 }
 
+/* 1. Page Header & Banner */
 .hr-banner {
-  background: white;
-  border: 1px solid var(--jira-border, #dfe1e6);
-  border-radius: 6px;
-  padding: 20px 24px;
-  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.04);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border, #dfe1e6);
+  border-radius: var(--radius-lg, 8px);
+  padding: 18px 24px;
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -29,36 +34,222 @@
   gap: 16px;
 }
 
-.hr-card-list {
-  background: white;
-  border-radius: 6px;
-  border: 1px solid var(--jira-border, #dfe1e6);
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.04);
+.hr-banner__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.hr-card-header {
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(228, 228, 231, 0.8);
+.hr-banner__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md, 6px);
+  background-color: var(--jira-blue-subtle, #deebff);
+  color: var(--jira-blue, #0052cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hr-banner__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hr-banner__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-heading, #172b4d);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.hr-banner__desc {
+  font-size: 12.5px;
+  color: var(--color-text-subtle, #5e6c84);
+  margin: 4px 0 0 0;
+}
+
+/* 2. KPI Summary Metrics Strip */
+.hr-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.hr-kpi-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border, #dfe1e6);
+  border-radius: var(--radius-lg, 8px);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hr-kpi-card__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-subtle, #5e6c84);
+}
+
+.hr-kpi-card__value {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--color-text-heading, #172b4d);
+}
+
+.hr-kpi-card__sub {
+  font-size: 11.5px;
+  color: var(--color-text-subtle, #5e6c84);
+}
+
+/* 3. Filter & Search Toolbar */
+.hr-toolbar {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border, #dfe1e6);
+  border-radius: var(--radius-lg, 8px);
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.hr-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.hr-search-wrap {
+  position: relative;
+  min-width: 240px;
+  max-width: 340px;
+  flex: 1;
+}
+
+.hr-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-subtle, #5e6c84);
+  pointer-events: none;
+  display: flex;
+}
+
+.hr-search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 32px;
+  font-size: 12.5px;
+  border: 1px solid var(--color-border, #dfe1e6);
+  border-radius: var(--radius-sm, 4px);
+  background-color: #fafbfc;
+  color: var(--color-text-heading, #172b4d);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.hr-search-input:focus {
+  background-color: #ffffff;
+  border-color: var(--color-border-focus, #4c9aff);
+  box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.15);
+}
+
+.hr-role-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hr-role-pill {
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid var(--color-border, #dfe1e6);
+  background-color: #ffffff;
+  color: var(--color-text-subtle, #5e6c84);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hr-role-pill:hover {
+  background-color: var(--color-surface-hover, #ebecf0);
+  color: var(--color-text-heading, #172b4d);
+}
+
+.hr-role-pill--active {
+  background-color: var(--jira-blue-subtle, #deebff);
+  color: var(--jira-blue, #0052cc);
+  border-color: #4c9aff;
+  font-weight: 600;
+}
+
+/* 4. Members List Container */
+.hr-card-list {
+  background-color: #ffffff;
+  border-radius: var(--radius-lg, 8px);
+  border: 1px solid var(--color-border, #dfe1e6);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.hr-card-header {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--color-border, #dfe1e6);
+  background-color: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hr-card-header__title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text-heading, #172b4d);
+  margin: 0;
+}
+
+.hr-card-header__meta {
+  font-size: 12px;
+  color: var(--color-text-subtle, #5e6c84);
 }
 
 .hr-member-item {
-  padding: 24px;
-  border-bottom: 1px solid var(--color-zinc-100);
-  transition: background-color 0.15s ease;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border-subtle, #ebecf0);
+  transition: background-color var(--transition-fast);
+}
+
+.hr-member-item:last-child {
+  border-bottom: none;
 }
 
 .hr-member-item:hover {
-  background-color: rgba(244, 244, 245, 0.6);
+  background-color: #fafbfc;
 }
 
 .hr-member-flex {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 @media (min-width: 1024px) {
@@ -69,16 +260,194 @@
   }
 }
 
+.hr-member-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+.hr-member-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--color-border, #dfe1e6);
+  flex-shrink: 0;
+}
+
+.hr-member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.hr-member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hr-member-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-heading, #172b4d);
+  margin: 0;
+}
+
+.hr-member-role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--jira-blue, #0052cc);
+  background-color: var(--jira-blue-subtle, #deebff);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs, 3px);
+}
+
+.hr-member-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-subtle, #5e6c84);
+  flex-wrap: wrap;
+}
+
+.hr-github-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-heading, #172b4d);
+  background-color: #f4f5f7;
+  border: 1px solid var(--color-border, #dfe1e6);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.hr-skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.hr-skill-tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 4px);
+  background-color: #f4f5f7;
+  border: 1px solid var(--color-border, #dfe1e6);
+  color: var(--color-text-body, #172b4d);
+}
+
+.hr-epics-section {
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hr-epics-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-subtle, #5e6c84);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hr-epics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hr-epic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 4px);
+}
+
+/* Workload Column */
+.hr-workload-col {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hr-workload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.hr-workload-label {
+  font-weight: 600;
+  color: var(--color-text-heading, #172b4d);
+}
+
+.hr-workload-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
 .hr-progress-bar {
   width: 100%;
-  background-color: var(--color-zinc-100);
-  height: 8px;
-  border-radius: 9999px;
+  background-color: #ebecf0;
+  height: 7px;
+  border-radius: var(--radius-full, 9999px);
   overflow: hidden;
 }
 
 .hr-progress-fill {
   height: 100%;
-  border-radius: 9999px;
+  border-radius: var(--radius-full, 9999px);
   transition: width 0.3s ease;
+}
+
+.hr-overload-alert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #bf2600;
+  font-weight: 600;
+  background-color: #ffebe6;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid #ffbdad;
+}
+
+.hr-workload-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--color-text-subtle, #5e6c84);
+}
+
+@media (max-width: 768px) {
+  .hr-view {
+    padding: 16px;
+  }
+  .hr-workload-col {
+    max-width: 100%;
+  }
 }
